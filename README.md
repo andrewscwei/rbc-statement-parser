@@ -15,7 +15,7 @@ This script only works under very specific conditions:
 Next, simply run:
 
 ```sh
-python parse.py <PATH_TO_FILE>
+$ python parse.py <PATH_TO_FILE>
 ```
 
 Voila, your statements are parsed into 3 columns: **Transaction Date**, **Activity Description** and **Amount**. You can then bulk copy them to Google Sheets.
