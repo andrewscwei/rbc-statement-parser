@@ -20,6 +20,10 @@ $ python parse.py <PATH_TO_FILE>
 
 Voila, your statements are parsed into 3 columns: **Transaction Date**, **Activity Description** and **Amount**. You can then bulk copy them to Google Sheets.
 
+## Disclaimer
+
+This script only works for **VERY SPECIFIC** cases.
+
 ## License
 
 This software is released under the [MIT License](http://opensource.org/licenses/MIT).
