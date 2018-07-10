@@ -1,16 +1,15 @@
 # rbc-visa-statement-parser
 
-Handy Python script to parse RBC Visa statements and outputs a file that contains columns: **Transaction Date**, **Activity Description** and **Amount**.
+Handy Python script to parse RBC statements and outputs a file that contains columns: **Transaction Date**, **Activity Description** and **Amount**.
 
 ## Usage
 
 This script only works under very specific conditions:
 
-1. You downloaded the RBC Visa statement as a PDF file and uploaded it onto Google Drive
-2. Using Google Drive's PDF viewer, you copied each transaction row of the statement to the clipboard. You can bulk copy muliple rows, but you **MUST ONLY** copy the contents of the transaction rows, nothing else.
-3. Paste everything to some text editor.
-4. Repeat for all statements you have.
-5. Save the file somewhere locally.
+1. From Online Banking (or from Visa statement PDF), you copied all transaction rows to the clipboard. You can bulk copy muliple rows, but you **MUST ONLY** copy the contents of the transaction rows, nothing else.
+2. Paste everything to some text editor.
+3. Repeat for all statements you have.
+4. Save the file somewhere locally.
 
 Next, simply run:
 
