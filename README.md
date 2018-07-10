@@ -1,4 +1,4 @@
-# rbc-visa-statement-parser
+# rbc-statement-parser
 
 Handy Python script to parse RBC statements and outputs a file that contains columns: **Transaction Date**, **Activity Description** and **Amount**.
 
