@@ -22,7 +22,3 @@ Voila, your statements are parsed into 3 columns: **Transaction Date**, **Activi
 ## Disclaimer
 
 This script only works for **VERY SPECIFIC** cases.
-
-## License
-
-This software is released under the [MIT License](http://opensource.org/licenses/MIT).
