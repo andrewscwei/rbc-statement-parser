@@ -4,6 +4,7 @@ config/shopify.yml
 .env.*
 _site
 /.idea
+.vscode
 
 # Compiled source
 *.com
