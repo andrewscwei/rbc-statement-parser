@@ -1,69 +1,75 @@
 import re
 import sys
 
-# Formats a line in the statement, with each field separated with spaces.
-def format_statement(line):
-  return r'{0} {1} {2}'.format('{:<18}'.format(line.group(1)), '{:<60}'.format(re.sub('[^A-Za-z0-9 ]+', '', line.group(2))), line.group(3))
+from config import categories, exclude_line_regexes, max_col_widths
+
+# Prettifies all lines in the statement, adding uniform spacing between columns.
+def format_statement(match):
+  col_date = match.group(1).ljust(max_col_widths['date'])
+  col_desc = match.group(2).ljust(max_col_widths['desc'])
+  col_value = match.group(3).ljust(max_col_widths['value'])
+  return r'{0}    {1}    {2}'.format(col_date, col_desc, col_value)
 
 # Get input file from args.
-filein = sys.argv[1]
-fileout = filein + ".parsed"
+file_in = sys.argv[1]
+file_out = file_in + '-parsed'
 
-print(f'Parsing file "{filein}" > "{fileout}"...')
+print(f'Parsing file "{file_in}" > "{file_out}"...')
 
 # Regex for dates.
-dateregex = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
-
-# Regex for transaction codes.
-coderegex = '[0-9]{23}'
+regex_date = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
 
 # Regex for money values.
-valueregex = r'-?\$[0-9,]+.?[0-9]{2}'
+regex_value = r'-?\$[0-9,]+.?[0-9]{2}'
+
+# Regex for transaction codes.
+regex_code = r'[0-9]{23}'
 
 # Store file content in string.
-file = open(filein, 'r')
-readstr = file.read()
+file = open(file_in, 'r')
+read_str = file.read()
 file.close()
 
-# Count original number of lines.
-ocloc = len(readstr.split('\n'))
+# Count original number of lines, for output reference only.
+old_cloc = len(read_str.split('\n'))
 
-# Remove blank lines
-readstr = re.sub(r'\n(?!({0}))'.format(dateregex), ' ', readstr)
+# Remove all blank lines but leave one at the EOF.
+read_str = re.sub(r'\n(?!({0}))'.format(regex_date), ' ', read_str) + '\n'
 
-# Remove posting date, only keep transaction date.
-readstr = re.sub(r'({0}) ({1})'.format(dateregex, dateregex), r'\1', readstr)
+# Remove posting date that is before the transaction date and only keep
+# transaction date.
+read_str = re.sub(r'({0}) ({1})'.format(regex_date, regex_date), r'\1', read_str)
 
-# Remove currency exchange info.
-readstr = re.sub(r'(Foreign Currency.*)(\$)', r'\2', readstr)
+# Remove the currency exchange info that is before the money value.
+read_str = re.sub(r'(Foreign Currency.*)({0})'.format(regex_value), r'\2', read_str)
 
-# Remove transaction code.
-readstr = re.sub(r'{0}'.format(coderegex), '', readstr)
+# Move transaction code to the end.
+read_str = re.sub(r'({0})(.*)({1})(.*)'.format(regex_date, regex_code), r'\1 \2 \4 \3', read_str)
 
 # Remove tabs.
-readstr = re.sub(r'\t', ' ', readstr)
+read_str = re.sub(r'\t', ' ', read_str)
 
 # Remove extra spaces.
-readstr = re.sub(r' +', ' ', readstr)
+read_str = re.sub(r' +', ' ', read_str)
 
-# Remove payments.
-readstr = re.sub(r'(.*?)PAYMENT - THANK YOU(.*?)\n', '', readstr)
+# Remove all lines in the regexes of lines to exclude.
+for regex in exclude_line_regexes:
+  read_str = re.sub(re.compile('%s%s%s' % (r'(.*?)', regex, r'(.*?)\n')), '', read_str)
 
-# Isolate money value.
-readstr = re.sub(r'({0}) +(.*) +({1}) +({2})'.format(dateregex, valueregex, valueregex), format_statement, readstr)
-readstr = re.sub(r'({0}) +(.*) +({1})'.format(dateregex, valueregex), format_statement, readstr)
+# Apply space formatting.
+read_str = re.sub(r'({0}) +(.*) +({1})'.format(regex_date, regex_value), format_statement, read_str)
 
 # Remove trailing whitespace
-readstr = re.sub(r' +(\n)', r'\1', readstr)
+read_str = re.sub(r' +(\n)', r'\1', read_str)
 
 # Overwrite original file.
-file = open(fileout, 'w')
-file.write(readstr)
+file = open(file_out, 'w')
+file.write(read_str)
 file.close()
 
 # Count total lines in output string.
-ncloc = len(readstr.split('\n'))
+new_cloc = len(read_str.split('\n'))
 
-print(readstr)
+print(read_str)
 print()
-print(f'Parsing file "{filein}" > "{fileout}"... OK: {ocloc} > {ncloc} entr(ies) in result')
+print(f'Parsing file "{file_in}" > "{file_out}"... OK: {old_cloc} > {new_cloc} entr(ies) in result')
