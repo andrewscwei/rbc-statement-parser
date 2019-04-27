@@ -2,6 +2,20 @@
 
 Handy Python script to parse RBC statements and outputs a file that contains columns: **Transaction Date**, **Activity Description** and **Amount**.
 
+## Setup
+
+Use [VSCode](https://code.visualstudio.com/) with [Python extension](https://marketplace.visualstudio.com/itemdetails?itemName=ms-python.python). This project also uses [mypy](http://mypy-lang.org/) as its Python linter, so be sure to enable the following in `.vscode/settings.json`:
+
+```json
+{
+  ...
+  "python.linting.pylintEnabled": false,
+  "python.linting.mypyEnabled": true,
+  "python.linting.enabled": true,
+  ...
+}
+```
+
 ## Usage
 
 This script only works under very specific conditions:
@@ -19,7 +33,7 @@ $ pipenv shell
 $ python parse.py <PATH_TO_FILE>
 ```
 
-Voila, your statements are parsed into 3 columns: **Transaction Date**, **Activity Description** and **Amount**. You can then bulk copy them to Google Sheets.
+Voila, your statements are parsed into 4 columns: **Transaction Date**, **Activity Description**, **Amount** and **Reference Code**. You can then bulk copy them to Google Sheets.
 
 ## Disclaimer
 
