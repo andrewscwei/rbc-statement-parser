@@ -2,11 +2,14 @@ import re
 import sys
 
 # Formats a line in the statement, with each field separated with spaces.
-def format_statement(m):
-  return r'{0} {1} {2}'.format('{:<18}'.format(m.group(1)), '{:<60}'.format(re.sub('[^A-Za-z0-9 ]+', '', m.group(2))), m.group(3))
+def format_statement(line):
+  return r'{0} {1} {2}'.format('{:<18}'.format(line.group(1)), '{:<60}'.format(re.sub('[^A-Za-z0-9 ]+', '', line.group(2))), line.group(3))
 
 # Get input file from args.
 filein = sys.argv[1]
+fileout = filein + ".parsed"
+
+print(f'Parsing file "{filein}" > "{fileout}"...')
 
 # Regex for dates.
 dateregex = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
@@ -21,6 +24,9 @@ valueregex = r'-?\$[0-9,]+.?[0-9]{2}'
 file = open(filein, 'r')
 readstr = file.read()
 file.close()
+
+# Count original number of lines.
+ocloc = len(readstr.split('\n'))
 
 # Remove blank lines
 readstr = re.sub(r'\n(?!({0}))'.format(dateregex), ' ', readstr)
@@ -51,6 +57,13 @@ readstr = re.sub(r'({0}) +(.*) +({1})'.format(dateregex, valueregex), format_sta
 readstr = re.sub(r' +(\n)', r'\1', readstr)
 
 # Overwrite original file.
-file = open(filein, 'w')
+file = open(fileout, 'w')
 file.write(readstr)
 file.close()
+
+# Count total lines in output string.
+ncloc = len(readstr.split('\n'))
+
+print(readstr)
+print()
+print(f'Parsing file "{filein}" > "{fileout}"... OK: {ocloc} > {ncloc} entr(ies) in result')

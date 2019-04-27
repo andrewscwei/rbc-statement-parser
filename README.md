@@ -14,6 +14,8 @@ This script only works under very specific conditions:
 Next, simply run:
 
 ```sh
+$ pipenv install
+$ pipenv shell
 $ python parse.py <PATH_TO_FILE>
 ```
 
