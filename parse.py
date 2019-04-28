@@ -1,10 +1,12 @@
 import re
 import sys
+from typing import Match
 
 from config import categories, exclude_line_regexes, max_col_widths
 
+
 # Prettifies all lines in the statement, adding uniform spacing between columns.
-def format_statement(match):
+def format_statement(match: Match) -> str:
   col_date = match.group(1).ljust(max_col_widths['date'])
   col_desc = match.group(2).ljust(max_col_widths['desc'])
   col_value = match.group(3).ljust(max_col_widths['value'])
@@ -12,18 +14,18 @@ def format_statement(match):
 
 # Get input file from args.
 file_in = sys.argv[1]
-file_out = file_in + '-parsed'
+file_out = f'{file_in}-parsed'
 
 print(f'Parsing file "{file_in}" > "{file_out}"...')
 
 # Regex for dates.
-regex_date = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
+regex_date: str = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
 
 # Regex for money values.
-regex_value = r'-?\$[0-9,]+.?[0-9]{2}'
+regex_value: str = r'-?\$[0-9,]+.?[0-9]{2}'
 
 # Regex for transaction codes.
-regex_code = r'[0-9]{23}'
+regex_code: str = r'[0-9]{23}'
 
 # Store file content in string.
 file = open(file_in, 'r')
@@ -31,7 +33,7 @@ read_str = file.read()
 file.close()
 
 # Count original number of lines, for output reference only.
-old_cloc = len(read_str.split('\n'))
+old_cloc: int = len(read_str.split('\n'))
 
 # Remove all blank lines but leave one at the EOF.
 read_str = re.sub(r'\n(?!({0}))'.format(regex_date), ' ', read_str) + '\n'
