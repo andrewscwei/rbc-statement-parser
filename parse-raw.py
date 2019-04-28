@@ -1,3 +1,8 @@
+# This script parses transaction rows copied directly from RBC online banking
+# from within a web browser. It also works if you copied the rows from a
+# downloaded VISA statement PDF (VISA only) from within Google Drive. See the
+# README for more details.
+
 import json
 import re
 import sys

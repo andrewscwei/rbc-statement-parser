@@ -1,12 +1,6 @@
 # This script parses a copied chunk from an e-statement PDF of an RBC
 # chequing/saving account. Note that this script does not work with VISA
-# e-statement PDFs because the format is different. In order for this script to
-# work, you MUST open the PDF in Google Drive and copy the statement tables with
-# the selection caret starting at the first character of the date of the first
-# transaction, and ending at the last character of the money amount of the last
-# statement. Page breaks are not accounted for, so copy the statements in the
-# table PER PAGE. Copy all of these entries into a text file, then run this
-# script against it.
+# e-statement PDFs because the format is different.
 #
 # Consider that a single transaction (once copied over) can span over multiple
 # lines. Here are some known patterns:

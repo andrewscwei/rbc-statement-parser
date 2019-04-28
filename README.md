@@ -22,17 +22,17 @@ Only the following scenarios are supported. For any other scenario this script w
 
 ### VISA Statements in PDF Format
 
-Download the statement as a PDF, then upload it to your Google Drive. Open the PDF **from within** Google Drive on your browser, then copy the transaction rows with the selection caret starting at the first character of the date of the first transaction, and ending at the last character of the money amount of the last statement. Page breaks are not accounted for, so copy the statements in the table PER PAGE. Paste these rows into a **new line** of a text file. The text file is now ready to be parsed by `parse.py`.
+Download the statement as a PDF, then upload it to your Google Drive. Open the PDF **from within** Google Drive on your browser, then copy the transaction rows with the selection caret starting at the first character of the date of the first transaction, and ending at the last character of the money amount of the last statement. Page breaks are not accounted for, so copy the statements in the table PER PAGE. Paste these rows into a **new line** of a text file. The text file is now ready to be parsed by `parse-raw.py`.
 
 > **WARNING**: You need to do the above exactly as described. Meaning you have to open the PDF from Google Drive and copy the rows to your clipboard from inside the PDF file opened by Google Drive. This is because rows copied by Google Drive has a specific format that is favorable and different from that of other programs. If you copy the rows from another program, say, *macOS Preview*, this script will not work.
 
 ### VISA Statements Inside Online Banking
 
-This refers to viewing your transactions from RBC Online Banking in a web browser. Simply copy the rows to a text file. They should be delimited by a tab. Run `parse.py` against it.
+This refers to viewing your transactions from RBC Online Banking in a web browser. Simply copy the rows to a text file. They should be delimited by a tab. Run `parse-raw.py` against it.
 
 ### Personal Banking Statements in PDF Format
 
-This includes accounts such as chequing and savings, where you can deposit/withdraw money from. Download the statement as a PDF, then upload it to your Google Drive. Open the PDF **from within** Google Drive on your browser, then copy the transaction rows with the selection caret starting at the first character of the date of the first transaction, and ending at the last character of the money amount of the last statement. Page breaks are not accounted for, so copy the statements in the table PER PAGE. Paste these rows into a **new line** of a text file. The text file is now ready to be parsed by `parse-pdf-chunks.py`.
+This includes accounts such as chequing and savings, where you can deposit/withdraw money from. Download the statement as a PDF, then upload it to your Google Drive. Open the PDF **from within** Google Drive on your browser, then copy the transaction rows with the selection caret starting at the first character of the date of the first transaction, and ending at the last character of the money amount of the last statement. Page breaks are not accounted for, so copy the statements in the table PER PAGE. Paste these rows into a **new line** of a text file. The text file is now ready to be parsed by `parse-pb-pdf.py`.
 
 > **WARNING**: You need to do the above exactly as described. Meaning you have to open the PDF from Google Drive and copy the rows to your clipboard from inside the PDF file opened by Google Drive. This is because rows copied by Google Drive has a specific format that is favorable and different from that of other programs. If you copy the rows from another program, say, *macOS Preview*, this script will not work.
 
