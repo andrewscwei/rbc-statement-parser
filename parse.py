@@ -1,6 +1,6 @@
 import re
 import sys
-from typing import List, Match
+from typing import Match
 
 from categories import categories
 from excludes import excludes
@@ -8,9 +8,9 @@ from excludes import excludes
 tmp_prefix = '<TMP>'
 tmp_code = ''.ljust(23, '0')
 
-regex_date: str = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
-regex_amount: str = r'-?\$[0-9,]+.?[0-9]{2}'
-regex_code: str = r'[0-9]{23}'
+regex_date = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
+regex_amount = r'-?\$[0-9,]+.?[0-9]{2}'
+regex_code = r'[0-9]{23}'
 
 file_in = sys.argv[1]
 file_out = f'{file_in}-parsed'
