@@ -1,10 +1,12 @@
-# This script parses an e-statement of an RBC chequing/saving account. In order
-# for this script to work, you MUST open the PDF in Google Drive and copy the
-# statement tables with the selection caret starting at the first character of
-# the date of the first transaction, and ending at the last character of the
-# money amount of the last statement. Page breaks are not accounted for, so
-# copy the statements in the table PER PAGE. Copy all of these entries into a
-# text file, then run this script against it.
+# This script parses a copied chunk from an e-statement PDF of an RBC
+# chequing/saving account. Note that this script does not work with VISA
+# e-statement PDFs because the format is different. In order for this script to
+# work, you MUST open the PDF in Google Drive and copy the statement tables with
+# the selection caret starting at the first character of the date of the first
+# transaction, and ending at the last character of the money amount of the last
+# statement. Page breaks are not accounted for, so copy the statements in the
+# table PER PAGE. Copy all of these entries into a text file, then run this
+# script against it.
 #
 # Consider that a single transaction (once copied over) can span over multiple
 # lines. Here are some known patterns:
@@ -41,18 +43,25 @@
 #   5. Now that we have a string with each line corresponding to a transaction,
 #      apply bulk parsing.
 
+import json
 import re
 import sys
 from typing import Match
 
-from categories import categories
-from excludes import excludes
+with open('config/categories.json') as json_file:
+  data = json.load(json_file)
+  categories = data
+
+with open('config/excludes.json') as json_file:
+  data = json.load(json_file)
+  remove_lines = data['lines']
+  remove_words = data['words']
 
 tmp_prefix = '<TMP>'
 tmp_code = ''.ljust(23, '0')
 
 regex_date = r'[0-9]{1,2} [A-Z][a-z]{2}'
-regex_amount = r'[0-9,]+\.[0-9]{2}'
+regex_amount = r'-?[0-9,]+\.[0-9]{2}'
 regex_code = r'[0-9]{23}'
 
 file_in = sys.argv[1]
@@ -65,7 +74,7 @@ def format_statement(match: Match) -> str:
   col_desc = match.group(2).ljust(50)
   col_amount = match.group(3).ljust(15)
   col_category = match.group(4).ljust(30)
-  return r'{0}    {1}    {2}    {3}'.format(col_date, col_desc, col_category, col_amount)
+  return r'{0}	{1}	{2}	{3}'.format(col_date, col_desc, col_category, col_amount)
 
 print(f'Parsing file "{file_in}" > "{file_out}"...')
 print()
@@ -119,8 +128,12 @@ for line in read_str.splitlines():
     curr_stream += f' {line}'
 
 # Remove all lines in the regexes of lines to exclude.
-for regex in excludes:
+for regex in remove_lines:
   output = re.sub(re.compile('%s%s%s' % (r'(.*?)', regex, r'(.*?)\n')), '', output)
+
+# Strip useless info.
+for regex in remove_words:
+  output = re.sub(re.compile(regex), '', output)
 
 # Assign known categories to each transaction. If the category not known, assign
 # "Others" by default. Perform this operation in 3 steps:
@@ -142,6 +155,11 @@ output = re.sub(r'({0}) +(.*) +(\${1}) +(.*)'.format(regex_date, regex_amount), 
 
 # Remove trailing whitespace
 output = re.sub(r' +(\n)', r'\1', output)
+
+# Write output to file.
+file = open(file_out, 'w')
+file.write(output)
+file.close()
 
 # Count total lines in output string and minus one to account for the blank line
 # at EOF.

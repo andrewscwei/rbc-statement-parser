@@ -38,6 +38,7 @@ Thumbs.db
 .jekyll-metadata
 .ruby-version
 .cache
+.tmp
 .mypy_cache
 
 # Logs

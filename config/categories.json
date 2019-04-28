@@ -1,0 +1,317 @@
+{
+  "Alcohol": [
+    "801 LD RICHMOND LTD",
+    "BREWERY",
+    "BREWHALL",
+    "BREWING",
+    "FUGGLES & WARLOCK",
+    "LIQUOR",
+    "MOODY ALES",
+    "PORTLAND CRAFT"
+  ],
+  "Transportation/Gas": [
+    "BOUNDARY TOWN PANTRY",
+    "CHEVRON",
+    "SHELL 3596",
+    "SHELL 5511 GARDEN CITY",
+    "SHELL OIL",
+    "SUPER SAVE GAS"
+  ],
+  "Transportation/Insurance": [
+    "ICBC"
+  ],
+  "Transportation/Loans": [
+    "Personal Loan SPL"
+  ],
+  "Transportation/Maintenance": [
+    "BMS AUTO HAUS",
+    "NONDA",
+    "SENSHA-YA",
+    "SPEEDY GLASS"
+  ],
+  "Transportation/Parking": [
+    "CITY OF PORTLAND",
+    "CITY OF VICTORIA",
+    "EASYPARK",
+    "IMPARK",
+    "PARKING",
+    "PAYBYPHONE"
+  ],
+  "Transportation/Penalties": [
+    "CITY OF VAN-BYLAW FINE",
+    "BUSTERS TOWING"
+  ],
+  "Bank/Charges": [
+    "ANNUAL FEE",
+    "BALANCEPROTECTOR PREMIUM",
+    "CASH ADVANCE FEE",
+    "Monthly fee",
+    "Overdraft handling fee",
+    "Overdraft Protection fee",
+    "OVERLIMIT FEE",
+    "PURCHASE INTEREST"
+  ],
+  "Bank/Interests": [
+    "CASH ADVANCE INTEREST",
+    "Loan interest",
+    "Overdraft interest"
+  ],
+  "Business/Admin": [
+    "ONESTOP - BCGOV",
+    "BC REGISTRY"
+  ],
+  "Coffee": [
+    "BURO VANCOUVER",
+    "CAFE LA FORET",
+    "COFFEE",
+    "JJ BEAN",
+    "LEANNS CAFE",
+    "OUR TOWN",
+    "STARBUCKS",
+    "THE LOAFE",
+    "TIM HORTONS"
+  ],
+  "Commute/Public Transit": [
+    "CAR2GO"
+  ],
+  "Digital/Recreation": [
+    "NETFLIX",
+    "PLAYSTATION NETWORK",
+    "SPOTIFY"
+  ],
+  "Digital/Resources": [
+    "ENVATOMARKET",
+    "PIXELRESORT"
+  ],
+  "Digital/Utilities": [
+    "ADOBE",
+    "APPLE SEARCH ADS",
+    "CIRCLECI",
+    "EXPRSVPN",
+    "GITHUB",
+    "GOOGLE",
+    "IWANTMYNAME",
+    "PADDLE.NET\\* KAPELI\\.COM",
+    "PRISMIC\\.IO",
+    "SEARCHADS"
+  ],
+  "Electronics/Accessories": [
+    "GEEKKEYS",
+    "KONO STORE",
+    "LEE S ELECTRONIC",
+    "M KEYBOARDS",
+    "SIGNATURE PLASTICS"
+  ],
+  "Electronics/Devices": [
+    "APPLE.*STORE"
+  ],
+  "Electronics/Recreation": [
+    "ITUNES"
+  ],
+  "Events/Business": [
+
+  ],
+  "Events/Recreation": [
+    "COMIC CON",
+    "COMMODORE BALLROOM",
+    "STANLEY PARK"
+  ],
+  "Food": [
+    "A&W",
+    "BAKERY",
+    "BANH MI",
+    "BBQ",
+    "BEEF NOODLE",
+    "BISTRO",
+    "BO BO FISH",
+    "BOILING POINT",
+    "BREAKFAST",
+    "BREW HOUSE",
+    "BUBBLE WAFFLE",
+    "BUMP AND GRIND CAFE",
+    "BURGOO",
+    "CACTUS CLUB",
+    "CAFE DE LORANGERIE",
+    "CAFE GLOUCESTER",
+    "CAPTAIN\\'S BOIL",
+    "CHATIME",
+    "CHINA LAN",
+    "CHURCH\\'S CHICKEN",
+    "COLONY MAIN",
+    "COPA CAFE",
+    "CUISINE",
+    "DINER",
+    "DINNER",
+    "DISCO CHEETAH KOREAN",
+    "DOORDASH",
+    "DRIED FRUITE",
+    "EGGSPECTATION",
+    "EMPIRE SEAFOOD RESTAUR",
+    "FATBURGER",
+    "FOOD",
+    "FRESH TEA",
+    "GABI & JULES",
+    "GNARLY ROOT PIZZA",
+    "GOOD BOWL",
+    "GOTHAM STEAKHOUSE",
+    "GYOKIN NAN-NIN",
+    "HAPPY TREE HOUSE",
+    "HEIRLOOM",
+    "HIKARI VANCOUVER",
+    "JIANGHU",
+    "JOEY BURNABY",
+    "JOHN 3:16",
+    "KENTUCKY FRIED CHICKEN",
+    "KITANOYA GUU",
+    "KITCHEN",
+    "LOTUS THE PLACE FOR PHO",
+    "LUNCH",
+    "MAHONY & SONS",
+    "MANZO",
+    "MARUTAMA",
+    "MCDONALD",
+    "ME \\+ CREPE",
+    "MEET FRESH",
+    "MEMORY CORNER",
+    "NEW SPICY CHILI RESTAURAN",
+    "NYF",
+    "ORANGE JULIUS",
+    "ORIGINAL JOE",
+    "OYSTER",
+    "PAJO\\'S",
+    "PENANG DELIGHT",
+    "PHO 37",
+    "PHO GOODNESS",
+    "PIZZA",
+    "POK POK",
+    "POKEY OKEY",
+    "POP BAR",
+    "POTTERS GARDEN KOREAN",
+    "QOOLA",
+    "RAIN OR SHINE",
+    "RAMEN",
+    "RESTAURANT",
+    "RIVERWAY CLUBHOUSE",
+    "SAL Y LIMON",
+    "SHANG NOODLE HOUSE",
+    "SHIANG GARDEN SEAFOOD",
+    "SILKWAY HALAL",
+    "SINGLE SHOT",
+    "SKIPTHEDISHES",
+    "SNACK LAND",
+    "SOODA KOREAN",
+    "SUGAR LAB",
+    "TACOS",
+    "TALAY THAI",
+    "TANGRAM",
+    "TERRA BREADS",
+    "THE BAO PLACE",
+    "THE OAKWOOD CANADIAN",
+    "THE PIT",
+    "TOO TWO",
+    "TOP SHANGHAI",
+    "TSUKIJI",
+    "UBER EATS",
+    "VEGETARIAN",
+    "WO FUNG",
+    "ZAC ZAC"
+  ],
+  "Groceries": [
+    "DARUMAYA",
+    "LONDON DRUGS",
+    "MARKETPLACE IGA",
+    "OSAKA #005 RICHMOND BC",
+    "SHOPPERSDRUGMART",
+    "SUCCESS SUPERMA",
+    "SUPERSTORE",
+    "TARGET 00003467 CLACKAMAS",
+    "WAL-MART"
+  ],
+  "Hobbies": [
+    "VANCOUVER STREET BATTLE",
+    "THE BROKEN TOKEN",
+    "STAGE 18",
+    "MAGIC STRONGHOLD",
+    "IMPERIAL HOBBIES",
+    "FAMOUS PLAYER",
+    "CINEPLEX",
+    "BOOKS AND VIDEO",
+    "BOARDGAMEBLISS",
+    "BOARD GAME",
+    "BADMINTON"
+  ],
+  "Household/Bills": [
+
+  ],
+  "Household/Enhancements": [
+    "ASSURED ENVIRONMENTAL",
+    "IKEA",
+    "ROOM IN ORDER"
+  ],
+  "Income": [
+  ],
+  "Investments/Cryptocurrency": [
+    "COINBASE"
+  ],
+  "Investments/Personal": [
+    "Investment Tangerine"
+  ],
+  "Investments/RRSP": [
+
+  ],
+  "Medical/Drugs": [
+
+  ],
+  "Medical/Insurance": [
+    "Insurance SUN LIFE"
+  ],
+  "Medical/Practitioners": [
+    "DR ERIC LI"
+  ],
+  "Office Supplies": [
+    "BEST BUY",
+    "CHANGZHOUJI",
+    "MICHAELS",
+    "STAPLES STORE"
+  ],
+  "Telecom/Home": [
+    "SHAW CABLESYSTEMS"
+  ],
+  "Telecom/Mobile": [
+    "BELL MOBILITY",
+    "FIDO MOBILE",
+    "T-MOBILE"
+  ],
+  "Travel": [
+    "BCF - TSAWWASSEN",
+    "BCF-SWARTZ BAY",
+    "DELTA AIR",
+    "DOLLAR RENT A CAR",
+    "EXPEDIA\\.CA",
+    "HILTON SF AIRPORT",
+    "ONLINE BOOKING",
+    "RAILWAY CAF",
+    "USCUSTOMS"
+  ],
+  "Shopping/B&M": [
+    "APPAREL",
+    "CHAMPS SPORTS",
+    "JJ METROPOLIS",
+    "MUJI",
+    "NINETEEN TEN",
+    "SEPHORA",
+    "UNIQLO",
+    "ZARA"
+  ],
+  "Shopping/Online": [
+    "ALIEXPRESS",
+    "AMAZON",
+    "AMZN",
+    "ETSY",
+    "HERSCHEL",
+    "IN OUT PARCEL",
+    "REDBUBBLE",
+    "THE STOWE",
+    "TSB SHIPPING"
+  ]
+}

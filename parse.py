@@ -1,9 +1,16 @@
+import json
 import re
 import sys
 from typing import Match
 
-from categories import categories
-from excludes import excludes
+with open('config/categories.json') as json_file:
+  data = json.load(json_file)
+  categories = data
+
+with open('config/excludes.json') as json_file:
+  data = json.load(json_file)
+  remove_lines = data['lines']
+  remove_words = data['words']
 
 tmp_prefix = '<TMP>'
 tmp_code = ''.ljust(23, '0')
@@ -18,11 +25,11 @@ file_out = f'{file_in}-parsed'
 # Applies formatting to all lines in the statement, adding uniform spacing
 # between columns.
 def format_statement(match: Match) -> str:
-  col_date = match.group(1).ljust(6)
-  col_code = match.group(2).ljust(23)
-  col_desc = match.group(3).ljust(50)
-  col_amount = match.group(4).ljust(15)
-  col_category = match.group(5).ljust(30)
+  col_date = match.group(1).ljust(6)[:6]
+  col_code = match.group(2).ljust(23)[:23]
+  col_desc = match.group(3).ljust(60)[:60]
+  col_amount = match.group(4).ljust(15)[:15]
+  col_category = match.group(5).ljust(30)[:30]
   return r'{0}    {1}    {2}    {3}    {4}'.format(col_date, col_code, col_desc, col_category, col_amount)
 
 print(f'Parsing file "{file_in}" > "{file_out}"...')
@@ -56,8 +63,12 @@ read_str = re.sub(r'{0} ({1})(.*)({2})(.*)'.format(tmp_prefix, regex_date, regex
 read_str = re.sub(r'{0} ({1})(.*)'.format(tmp_prefix, regex_date, regex_code), r'\1 {0} \2'.format(tmp_code), read_str)
 
 # Remove all lines in the regexes of lines to exclude.
-for regex in excludes:
+for regex in remove_lines:
   read_str = re.sub(re.compile('%s%s%s' % (r'(.*?)', regex, r'(.*?)\n')), '', read_str)
+
+# Strip useless info.
+for regex in remove_words:
+  read_str = re.sub(re.compile(regex), '', read_str)
 
 # Assign known categories to each transaction. If the category not known, assign
 # "Others" by default. Perform this operation in 3 steps:
@@ -83,7 +94,7 @@ read_str = re.sub(r'[0]{23}', ''.ljust(23, ' '), read_str)
 # Remove trailing whitespace
 read_str = re.sub(r' +(\n)', r'\1', read_str)
 
-# Overwrite original file.
+# Write output to file.
 file = open(file_out, 'w')
 file.write(read_str)
 file.close()
