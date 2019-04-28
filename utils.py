@@ -72,6 +72,9 @@ def optimize_whitespaces(s: str) -> str:
   # Remove trailing white spaces.
   s = re.sub(r' +(\n)', r'\1', s)
 
+  # Convert tabs to spaces.
+  s = re.sub(r'\t', ' ', s)
+
   return s
 
 def redact_lines(s: str) -> str:
@@ -120,7 +123,7 @@ def append_category_eol(line: str, delimiter: str = ' ') -> str:
 
   for category in categories:
     for regex in categories[category]:
-      line = re.sub(
+      (line, subbed) = re.subn(
         re.compile('%s%s%s%s' % (
           tmp_prefix,
           r'(.*?',
@@ -128,8 +131,12 @@ def append_category_eol(line: str, delimiter: str = ' ') -> str:
           r'.*?)$',
         )),
         r'\1' + delimiter + category,
-        line
+        line,
+        1,
       )
+
+      if subbed > 0: break
+    if subbed > 0: break
 
   line = re.sub(r'^{}(.*)$'.format(tmp_prefix), r'\1' + delimiter + 'Others', line)
 

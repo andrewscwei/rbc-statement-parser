@@ -37,56 +37,41 @@
 #   5. Now that we have a string with each line corresponding to a transaction,
 #      apply bulk parsing.
 
-import json
 import re
 import sys
 from typing import Match
 
-with open('config/categories.json') as json_file:
-  data = json.load(json_file)
-  categories = data
-
-with open('config/excludes.json') as json_file:
-  data = json.load(json_file)
-  remove_lines = data['lines']
-  remove_words = data['words']
-
-tmp_prefix = '<TMP>'
-tmp_code = ''.ljust(23, '0')
+from utils import (append_category_eol, cloc, file_to_str,
+                   optimize_whitespaces, redact_lines, str_to_file)
 
 regex_date = r'[0-9]{1,2} [A-Z][a-z]{2}'
 regex_amount = r'-?[0-9,]+\.[0-9]{2}'
-regex_code = r'[0-9]{23}'
+
+output_row_format = '{date}\t\t\t\t{description}\t{category}\t{amount}'
 
 file_in = sys.argv[1]
 file_out = f'{file_in}-parsed'
 
-# Applies formatting to all lines in the statement, adding uniform spacing
-# between columns.
 def format_statement(match: Match) -> str:
-  col_date = match.group(1).ljust(6)
-  col_desc = match.group(2).ljust(50)
-  col_amount = match.group(3).ljust(15)
-  col_category = match.group(4).ljust(30)
-  return r'{0}	{1}	{2}	{3}'.format(col_date, col_desc, col_category, col_amount)
+  date = match.group(1)
+  description = match.group(2)
+  amount = match.group(3)
+  category = match.group(4)
 
+  return output_row_format.format(date=date, description=description, amount=amount, category=category)
+
+# Prepare for parsing.
 print(f'Parsing file "{file_in}" > "{file_out}"...')
 print()
 
-# Store file content in string.
-file = open(file_in, 'r')
-read_str = file.read()
-file.close()
-
-# Count original number of lines, for output reference only.
-old_cloc: int = len(read_str.split('\n'))
-
-output = ''
+read_str = file_to_str(file_in)
+write_str = ''
+old_cloc = cloc(read_str)
 curr_stream = ''
 curr_date = None
 
-# Remove tabs.
-read_str = re.sub(r'\t', ' ', read_str)
+# Begin parsing.
+read_str = optimize_whitespaces(read_str)
 
 # Begin parsing the file so that each line ends up corresponding to a
 # transaction.
@@ -115,49 +100,22 @@ for line in read_str.splitlines():
   if m2:
     line = re.sub(r'{0}.*$'.format(regex_amount), '', line)
     curr_stream += f'{line} ${m2[0]}'
-    output += curr_stream
-    output += '\n'
+    curr_stream = append_category_eol(curr_stream)
+    formatted_str = re.sub(r'({0}) +(.*) +(\${1}) +(.*)'.format(regex_date, regex_amount), format_statement, curr_stream)
+    write_str += formatted_str
+    write_str += '\n'
     curr_stream = ''
+
+    print(formatted_str)
   else:
     curr_stream += f' {line}'
 
-# Remove all lines in the regexes of lines to exclude.
-for regex in remove_lines:
-  output = re.sub(re.compile('%s%s%s' % (r'(.*?)', regex, r'(.*?)\n')), '', output)
+write_str = redact_lines(write_str)
 
-# Strip useless info.
-for regex in remove_words:
-  output = re.sub(re.compile(regex), '', output)
+# End parsing.
+str_to_file(write_str, file_out)
 
-# Assign known categories to each transaction. If the category not known, assign
-# "Others" by default. Perform this operation in 3 steps:
-#   1. Add a tag to the beginning of each line. This is used to keep track of
-#      whether the line has been parsed (parsed line has that tag removed).
-#   2. Parse the lines and append the appropriate category at EOL.
-#   3. Revisit all lines still with the tag and append "Others" to EOL.
-output = re.sub(r'({0}.*\n)'.format(regex_date), r'{0} \1'.format(tmp_prefix), output)
-for category in categories:
-  for regex in categories[category]:
-    output = re.sub(re.compile('%s %s%s%s' % (tmp_prefix, r'(.*?', regex, r'.*?)\n')), r'\1' + ' ' + category + r'\n', output)
-output = re.sub(r'{0} (.*)\n'.format(tmp_prefix), r'\1 Others \n', output)
+new_cloc = cloc(write_str) - 1
 
-# Remove extra spaces.
-output = re.sub(r' +', ' ', output)
-
-# Apply space formatting.
-output = re.sub(r'({0}) +(.*) +(\${1}) +(.*)'.format(regex_date, regex_amount), format_statement, output)
-
-# Remove trailing whitespace
-output = re.sub(r' +(\n)', r'\1', output)
-
-# Write output to file.
-file = open(file_out, 'w')
-file.write(output)
-file.close()
-
-# Count total lines in output string and minus one to account for the blank line
-# at EOF.
-new_cloc = len(output.split('\n')) - 1
-
-print(output)
+print()
 print(f'Parsing file "{file_in}" > "{file_out}"... OK: {old_cloc} > {new_cloc} entr(ies) in result')
