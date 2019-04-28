@@ -33,6 +33,7 @@ categories: Dict[str, List[str]] = {
   "Transportation/Parking": [
     r'IMPARK',
     r'EASYPARK',
+    r'PAYBYPHONE',
     r'PARKING',
   ],
   "Transportation/Penalties": [
@@ -101,6 +102,7 @@ categories: Dict[str, List[str]] = {
   ],
   "Electronics/Devices": [
     r'APPLE ONLINE STORE',
+    r'APPLE STORE',
   ],
   "Electronics/Recreation": [
     r'ITUNES',
@@ -113,9 +115,12 @@ categories: Dict[str, List[str]] = {
   "Food": [
     r'LOTUS THE PLACE FOR PHO',
     r'SHANG NOODLE HOUSE',
+    r'BEEF NOODLE',
+    r'CAPTAIN\'S BOIL',
     r'NYF',
     r'PHO 37',
     r'PHO GOODNESS',
+    r'DRIED FRUITE',
     r'GABI & JULES',
     r'CHINA LAN',
     r'BUBBLE WAFFLE',
@@ -171,7 +176,6 @@ categories: Dict[str, List[str]] = {
     r'BAKERY',
     r'KENTUCKY FRIED CHICKEN',
     r'KITCHEN',
-    r'DOLPAN',
     r'A&W',
     r'POK POK',
     r'PIZZA',
@@ -185,12 +189,12 @@ categories: Dict[str, List[str]] = {
     r'SAL Y LIMON',
     r'MCDONALD',
     r'OYSTER',
-    r'GYU-KAKU',
     r'RIVERWAY CLUBHOUSE',
     r'COLONY MAIN',
     r'TOO TWO',
     r'BBQ',
     r'ORIGINAL JOE',
+    r'SINGLE SHOT',
     r'POP BAR',
     r'COPA CAFE',
     r'CHURCH\'S CHICKEN',
@@ -213,10 +217,12 @@ categories: Dict[str, List[str]] = {
     r'MARKETPLACE IGA',
     r'DARUMAYA',
     r'SUPERSTORE',
+    r'TARGET 00003467 CLACKAMAS',
   ],
   "Hobbies": [
     r'BADMINTON',
     r'BOARD GAME',
+    r'BOOKS AND VIDEO',
     r'CINEPLEX',
     r'FAMOUS PLAYER',
     r'VANCOUVER STREET BATTLE',
@@ -285,5 +291,6 @@ categories: Dict[str, List[str]] = {
     r'NINETEEN TEN',
     r'ETSY',
     r'APPAREL',
+    r'SEPHORA',
   ],
 }
