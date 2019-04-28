@@ -9,7 +9,7 @@ tmp_prefix = '<TMP>'
 tmp_code = ''.ljust(23, '0')
 
 regex_date = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
-regex_amount = r'-?\$[0-9,]+.?[0-9]{2}'
+regex_amount = r'-?\$[0-9,]+\.[0-9]{2}'
 regex_code = r'[0-9]{23}'
 
 file_in = sys.argv[1]
@@ -93,5 +93,4 @@ file.close()
 new_cloc = len(read_str.split('\n')) - 1
 
 print(read_str)
-print()
 print(f'Parsing file "{file_in}" > "{file_out}"... OK: {old_cloc} > {new_cloc} entr(ies) in result')

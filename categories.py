@@ -48,6 +48,7 @@ categories: Dict[str, List[str]] = {
   ],
   "Bank/Interests": [
     r'CASH ADVANCE INTEREST',
+    r'Loan interest',
   ],
   "Business/Admin": [
     r'ONESTOP - BCGOV',
@@ -111,6 +112,9 @@ categories: Dict[str, List[str]] = {
     r'COMIC CON',
   ],
   "Food": [
+    r'WO FUNG',
+    r'MEMORY CORNER',
+    r'THE BAO PLACE',
     r'LOTUS THE PLACE FOR PHO',
     r'SHANG NOODLE HOUSE',
     r'BEEF NOODLE',
@@ -240,7 +244,9 @@ categories: Dict[str, List[str]] = {
   "Investments/RRSP": [],
   "Medical/Drugs": [],
   "Medical/Insurance": [],
-  "Medical/Practitioners": [],
+  "Medical/Practitioners": [
+    r'DR ERIC LI',
+  ],
   "Office Supplies": [
     r'STAPLES STORE',
     r'MICHAELS',
