@@ -21,7 +21,8 @@
     "ICBC"
   ],
   "Transportation/Loans": [
-    "Personal Loan SPL"
+    "Personal Loan SPL",
+    "PERSONAL LOAN"
   ],
   "Transportation/Maintenance": [
     "BMS AUTO HAUS",
@@ -49,12 +50,16 @@
     "Overdraft handling fee",
     "Overdraft Protection fee",
     "OVERLIMIT FEE",
-    "PURCHASE INTEREST"
+    "OD INTEREST",
+    "PURCHASE INTEREST",
+    "MONTHLY FEE"
   ],
   "Bank/Interests": [
     "CASH ADVANCE INTEREST",
     "Loan interest",
-    "Overdraft interest"
+    "LOAN INTEREST",
+    "Overdraft interest",
+    "OD PROTECTION FEE"
   ],
   "Business/Admin": [
     "ONESTOP - BCGOV",
@@ -77,7 +82,8 @@
   "Digital/Recreation": [
     "NETFLIX",
     "PLAYSTATION NETWORK",
-    "SPOTIFY"
+    "SPOTIFY",
+    "PLAYSTATIONNETWORK"
   ],
   "Digital/Resources": [
     "ENVATOMARKET",
@@ -85,6 +91,7 @@
   ],
   "Digital/Utilities": [
     "ADOBE",
+    "Audible",
     "APPLE SEARCH ADS",
     "CIRCLECI",
     "EXPRSVPN",
@@ -118,8 +125,10 @@
   ],
   "Food": [
     "A&W",
+    "SING SING",
     "BAKERY",
     "BANH MI",
+    "DINESTY DUMPLING HOUSE",
     "BBQ",
     "BEEF NOODLE",
     "BISTRO",
@@ -263,10 +272,11 @@
 
   ],
   "Medical/Insurance": [
-    "Insurance SUN LIFE"
+    "SUN LIFE"
   ],
   "Medical/Practitioners": [
-    "DR ERIC LI"
+    "DR ERIC LI",
+    "NATURAL AND ORGANIC"
   ],
   "Office Supplies": [
     "BEST BUY",
@@ -280,7 +290,8 @@
   "Telecom/Mobile": [
     "BELL MOBILITY",
     "FIDO MOBILE",
-    "T-MOBILE"
+    "T-MOBILE",
+    "FIDO Mobile"
   ],
   "Travel": [
     "BCF - TSAWWASSEN",
@@ -306,6 +317,7 @@
   "Shopping/Online": [
     "ALIEXPRESS",
     "AMAZON",
+    "Amazon",
     "AMZN",
     "ETSY",
     "HERSCHEL",

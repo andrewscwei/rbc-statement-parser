@@ -48,7 +48,8 @@ file.close()
 # Count original number of lines, for output reference only.
 old_cloc: int = len(read_str.split('\n'))
 
-# Remove all blank lines but leave one at EOF for easier parsing later on.
+# Format all line chunks so each line starts with the corresponding transaction
+# date. Append a new line at the end for parsing convenience later on.
 read_str = re.sub(r'\n(?!{0})'.format(regex_date), ' ', read_str) + '\n'
 
 # Remove tabs.
