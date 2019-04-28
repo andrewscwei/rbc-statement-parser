@@ -5,10 +5,6 @@ from typing import List, Match
 from categories import categories
 from excludes import excludes
 
-exclude_line_regexes: List[str] = [
-  r'PAYMENT - THANK YOU',
-]
-
 tmp_prefix = '<TMP>'
 tmp_code = ''.ljust(23, '0')
 
@@ -60,20 +56,20 @@ read_str = re.sub(r'{0} ({1})(.*)({2})(.*)'.format(tmp_prefix, regex_date, regex
 read_str = re.sub(r'{0} ({1})(.*)'.format(tmp_prefix, regex_date, regex_code), r'\1 {0} \2'.format(tmp_code), read_str)
 
 # Remove all lines in the regexes of lines to exclude.
-for regex in exclude_line_regexes:
+for regex in excludes:
   read_str = re.sub(re.compile('%s%s%s' % (r'(.*?)', regex, r'(.*?)\n')), '', read_str)
 
 # Assign known categories to each transaction. If the category not known, assign
-# "Other" by default. Perform this operation in 3 steps:
+# "Others" by default. Perform this operation in 3 steps:
 #   1. Add a tag to the beginning of each line. This is used to keep track of
 #      whether the line has been parsed (parsed line has that tag removed).
 #   2. Parse the lines and append the appropriate category at EOL.
-#   3. Revisit all lines still with the tag and append "Other" to EOL.
+#   3. Revisit all lines still with the tag and append "Others" to EOL.
 read_str = re.sub(r'({0}.*\n)'.format(regex_date), r'{0} \1'.format(tmp_prefix), read_str)
 for category in categories:
   for regex in categories[category]:
     read_str = re.sub(re.compile('%s %s%s%s' % (tmp_prefix, r'(.*?', regex, r'.*?)\n')), r'\1' + ' ' + category + r'\n', read_str)
-read_str = re.sub(r'{0} (.*)\n'.format(tmp_prefix), r'\1 Other \n', read_str)
+read_str = re.sub(r'{0} (.*)\n'.format(tmp_prefix), r'\1 Others \n', read_str)
 
 # Remove extra spaces.
 read_str = re.sub(r' +', ' ', read_str)
