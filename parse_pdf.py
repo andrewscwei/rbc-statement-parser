@@ -52,13 +52,16 @@ output_row_format = '{date}\t\t\t\t{description}\t{category}\t{amount}'
 file_in = sys.argv[1]
 file_out = f'{file_in}-parsed'
 
-def format_statement(match: Match) -> str:
-  date = match.group(1)
-  description = match.group(2)
-  amount = match.group(3)
-  category = match.group(4)
+def format_statement(match: Match, with_padding: bool = False) -> str:
+  date = match.group(1) if not with_padding else match.group(1).ljust(6)
+  description = match.group(2) if not with_padding else match.group(2).ljust(60)
+  amount = match.group(3) if not with_padding else match.group(3).ljust(15)
+  category = match.group(4) if not with_padding else match.group(4).ljust(30)
 
   return output_row_format.format(date=date, description=description, amount=amount, category=category)
+
+def format_statement_with_padding(match: Match) -> str:
+  return format_statement(match, True)
 
 # Prepare for parsing.
 print(f'Parsing file "{file_in}" > "{file_out}"...')
@@ -104,9 +107,10 @@ for line in read_str.splitlines():
     formatted_str = re.sub(r'({0}) +(.*) +(\${1}) +(.*)'.format(regex_date, regex_amount), format_statement, curr_stream)
     write_str += formatted_str
     write_str += '\n'
-    curr_stream = ''
 
-    print(formatted_str)
+    print(re.sub(r'({0}) +(.*) +(\${1}) +(.*)'.format(regex_date, regex_amount), format_statement_with_padding, curr_stream))
+
+    curr_stream = ''
   else:
     curr_stream += f' {line}'
 

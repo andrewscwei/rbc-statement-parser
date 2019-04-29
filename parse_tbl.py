@@ -21,20 +21,21 @@ file_out = f'{file_in}-parsed'
 
 output_row_format = '{date}\t\t\t{code}\t{description}\t{category}\t{amount}'
 
-# Applies formatting to all lines in the statement, adding uniform spacing
-# between columns.
-def format_statement(match: Match) -> str:
-  date = match.group(1)
-  code = match.group(2)
-  description = match.group(3)
-  amount = match.group(4)
-  category = match.group(5)
+def format_statement(match: Match, with_padding: bool = False) -> str:
+  date = match.group(1) if not with_padding else match.group(1).ljust(6)
+  code = match.group(2) if not with_padding else match.group(2).ljust(23)
+  description = match.group(3) if not with_padding else match.group(3).ljust(60)
+  amount = match.group(4) if not with_padding else match.group(4).ljust(15)
+  category = match.group(5) if not with_padding else match.group(5).ljust(30)
 
   # Strip invalid transaction codes.
   if code == tmp_code:
-    code = ''
+    code = '' if not with_padding else ''.ljust(23)
 
   return output_row_format.format(date=date, code=code, description=description, amount=amount, category=category)
+
+def format_statement_with_padding(match: Match) -> str:
+  return format_statement(match, True)
 
 # Prepare for parsing.
 print(f'Parsing file "{file_in}" > "{file_out}"...')
@@ -67,12 +68,19 @@ read_str = re.sub(r'{0}({1})(.*)({2})(.*)'.format('<TMP>', regex_date, regex_cod
 read_str = re.sub(r'{0}({1})(.*)'.format('<TMP>', regex_date, regex_code), r'\1 {0} \2'.format(tmp_code), read_str)
 
 for line in read_str.splitlines():
+  match = re.findall(r'{0}'.format(regex_amount), line)
+
+  # If there are more than one money amount detected, only use the first one.
+  if match:
+    line = re.sub(r'{0}.*$'.format(regex_amount), '', line)
+    line += f'{ match[0]}'
+
   line = append_category_eol(line)
   formatted_str = re.sub(r'({0}) +({1}) +(.*) +({2}) +(.*)'.format(regex_date, regex_code, regex_amount), format_statement, line)
   write_str += formatted_str
   write_str += '\n'
 
-  print(formatted_str)
+  print(re.sub(r'({0}) +({1}) +(.*) +({2}) +(.*)'.format(regex_date, regex_code, regex_amount), format_statement_with_padding, line))
 
 # End parsing.
 str_to_file(write_str, file_out)

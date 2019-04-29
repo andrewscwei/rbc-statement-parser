@@ -15,7 +15,7 @@ output_row_format = '{date}\t{account}\t\t{code}\t{description}\t{category}\t{am
 file_in = sys.argv[1]
 file_out = f'{file_in}-parsed'
 
-def format_statement(cols: List[str]) -> str:
+def format_statement(cols: List[str], with_padding: bool = False) -> str:
   account = cols[input_cols.index('account_type')] + ' ***' + cols[input_cols.index('account_number')][-4:]
   date = cols[input_cols.index('date')]
   code = cols[input_cols.index('cheque_number')]
