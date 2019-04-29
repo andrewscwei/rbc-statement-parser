@@ -42,10 +42,14 @@ This includes accounts such as chequing and savings, where you can deposit/withd
 
 ## Usage
 
+Set up environment:
 ```sh
 $ pipenv install
 $ pipenv shell
-$
+```
+
+Parse files:
+```
 $ python parse_csv.py <path-to-csv-file>
 $ python parse_pdf.py <path-to-txt-file-of-transactions-copied-from-pdf>
 $ python parse_tbl.py <path-to-txt-file-of-transactions-copied-from-online-banking>
