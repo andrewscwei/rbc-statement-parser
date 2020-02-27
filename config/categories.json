@@ -27,12 +27,17 @@
   "Transportation/Maintenance": [
     "BMS AUTO HAUS",
     "NONDA",
+    "HERTZ RENT A CAR",
+    "NO. 1 COLLISION",
+    "AUDI",
+    "CDN TIRE",
     "SENSHA-YA",
     "SPEEDY GLASS"
   ],
   "Transportation/Parking": [
     "CITY OF PORTLAND",
     "CITY OF VICTORIA",
+    "PAY BY PHONE",
     "EASYPARK",
     "IMPARK",
     "PARKING",
@@ -40,7 +45,8 @@
   ],
   "Transportation/Penalties": [
     "CITY OF VAN-BYLAW FINE",
-    "BUSTERS TOWING"
+    "BUSTERS TOWING",
+    "COURT SERVICES"
   ],
   "Bank/Charges": [
     "ANNUAL FEE",
@@ -68,8 +74,12 @@
   ],
   "Coffee": [
     "BURO VANCOUVER",
+    "PORTO CAFE",
     "CAFE LA FORET",
     "COFFEE",
+    "PLATFORM 7",
+    "GIGI BLIN",
+    "LA CUISSON CAFE",
     "JJ BEAN",
     "LEANNS CAFE",
     "OUR TOWN",
@@ -78,7 +88,8 @@
     "TIM HORTONS"
   ],
   "Commute/Public Transit": [
-    "CAR2GO"
+    "CAR2GO",
+    "TRANSIT"
   ],
   "Digital/Recreation": [
     "NETFLIX",
@@ -96,7 +107,9 @@
     "APPLE SEARCH ADS",
     "CIRCLECI",
     "EXPRSVPN",
+    "VIMEO",
     "GITHUB",
+    "APPLE.COM/BILL",
     "GOOGLE",
     "IWANTMYNAME",
     "PADDLE.NET\\* KAPELI\\.COM",
@@ -108,10 +121,13 @@
     "KONO STORE",
     "LEE S ELECTRONIC",
     "M KEYBOARDS",
+    "HELLONOMAD",
+    "PEAKDESIGN",
     "SIGNATURE PLASTICS"
   ],
   "Electronics/Devices": [
-    "APPLE.*STORE"
+    "APPLE.*STORE",
+    "GOPRO"
   ],
   "Electronics/Recreation": [
     "ITUNES"
@@ -126,11 +142,22 @@
   ],
   "Food": [
     "A&W",
+    "BLOCK EIGHT",
+    "XIN FU TANG",
     "SING SING",
+    "BREWHOUSE",
+    "TAPWORKS",
+    "EATERY",
+    "INDIAN JUNCTION",
     "TAIWAN TAIPEI O",
     "SALT & STRAW",
+    "AUTOSTRADA",
     "BAKERY",
     "BANH MI",
+    "HANLIN TEA",
+    "LIVIA",
+    "UBER BV",
+    "JOHN 316",
     "DINESTY DUMPLING HOUSE",
     "BBQ",
     "BEEF NOODLE",
@@ -139,12 +166,22 @@
     "BOILING POINT",
     "BREAKFAST",
     "BREW HOUSE",
+    "LE CROCODILE",
     "BUBBLE WAFFLE",
     "BUMP AND GRIND CAFE",
     "BURGOO",
     "CACTUS CLUB",
+    "ICE CREAM",
+    "MARK'S",
+    "PANCAKE",
+    "BEER MARKET",
+    "EDO JAPAN",
+    "MENYA RAIZO",
     "CAFE DE LORANGERIE",
     "CAFE GLOUCESTER",
+    "EGGSTATIC",
+    "CIOPPINO",
+    "BAO DOWN",
     "CAPTAIN\\'S BOIL",
     "CHATIME",
     "CHINA LAN",
@@ -159,32 +196,41 @@
     "DRIED FRUITE",
     "EGGSPECTATION",
     "EMPIRE SEAFOOD RESTAUR",
+    "EARL'S",
     "FATBURGER",
     "FOOD",
     "FRESH TEA",
     "GABI & JULES",
     "GNARLY ROOT PIZZA",
+    "SUSHI",
     "GOOD BOWL",
     "GOTHAM STEAKHOUSE",
+    "LES FAUX BOURGEOIS",
     "GYOKIN NAN-NIN",
     "HAPPY TREE HOUSE",
     "HEIRLOOM",
     "HIKARI VANCOUVER",
     "JIANGHU",
     "JOEY BURNABY",
+    "BRITANNIA",
     "JOHN 3:16",
     "KENTUCKY FRIED CHICKEN",
+    "KINGSPARK",
     "KITANOYA GUU",
     "KITCHEN",
     "LOTUS THE PLACE FOR PHO",
     "LUNCH",
     "MAHONY & SONS",
+    "SHARE TEA",
     "MANZO",
     "MARUTAMA",
     "MCDONALD",
+    "THAI EXPRESS",
+    "CHEF TONY",
     "ME \\+ CREPE",
     "MEET FRESH",
     "MEMORY CORNER",
+    "MADANG GOUL",
     "NEW SPICY CHILI RESTAURAN",
     "NYF",
     "ORANGE JULIUS",
@@ -192,6 +238,7 @@
     "OYSTER",
     "PAJO\\'S",
     "PENANG DELIGHT",
+    "UBER *EATS",
     "PHO 37",
     "PHO GOODNESS",
     "PIZZA",
@@ -199,10 +246,14 @@
     "POKEY OKEY",
     "POP BAR",
     "POTTERS GARDEN KOREAN",
+    "MATCHA",
     "QOOLA",
     "RAIN OR SHINE",
     "RAMEN",
+    "REDBUD CAFE",
     "RESTAURANT",
+    "MOXIE'S",
+    "ROMER'S",
     "RIVERWAY CLUBHOUSE",
     "SAL Y LIMON",
     "SHANG NOODLE HOUSE",
@@ -236,6 +287,8 @@
     "SHOPPERSDRUGMART",
     "SUCCESS SUPERMA",
     "SUPERSTORE",
+    "SUPERMARKET",
+    "IZUMI-YA",
     "TARGET 00003467 CLACKAMAS",
     "WAL-MART"
   ],
@@ -243,22 +296,29 @@
     "VANCOUVER STREET BATTLE",
     "THE BROKEN TOKEN",
     "STAGE 18",
+    "GAMES",
     "MAGIC STRONGHOLD",
+    "CYPRESS MOUNTAIN",
+    "BC FISH",
     "IMPERIAL HOBBIES",
     "FAMOUS PLAYER",
     "CINEPLEX",
     "BOOKS AND VIDEO",
     "BOARDGAMEBLISS",
+    "KICKSTARTER",
+    "LONG & MCQUADE",
     "BOARD GAME",
     "BADMINTON"
   ],
   "Household/Bills": [
-
+    "FortisBC"
   ],
   "Household/Enhancements": [
     "ASSURED ENVIRONMENTAL",
+    "HOME DEPOT",
     "IKEA",
-    "ROOM IN ORDER"
+    "ROOM IN ORDER",
+    "GOT-JUNK"
   ],
   "Income": [
   ],
@@ -275,7 +335,8 @@
 
   ],
   "Medical/Insurance": [
-    "SUN LIFE"
+    "SUN LIFE",
+    "REVENUE SERVICES"
   ],
   "Medical/Practitioners": [
     "DR ERIC LI",
@@ -285,23 +346,31 @@
     "BEST BUY",
     "CHANGZHOUJI",
     "MICHAELS",
-    "STAPLES STORE"
+    "STAPLES STORE",
+    "CANADA COMPUTERS",
+    "OFFICE"
   ],
   "Telecom/Home": [
-    "SHAW CABLESYSTEMS"
+    "SHAW CABLESYSTEMS",
+    "TELECOM"
   ],
   "Telecom/Mobile": [
     "BELL MOBILITY",
     "FIDO MOBILE",
     "T-MOBILE",
+    "FIDO STORE",
     "FIDO Mobile"
   ],
   "Travel": [
+    "AIRBNB",
     "BCF - TSAWWASSEN",
     "BCF-SWARTZ BAY",
+    "BOOKING.COM",
     "DELTA AIR",
+    "HOTEL",
     "DOLLAR RENT A CAR",
     "EXPEDIA\\.CA",
+    "TRAVEL",
     "HILTON SF AIRPORT",
     "ONLINE BOOKING",
     "RAILWAY CAF",
@@ -313,7 +382,14 @@
     "JJ METROPOLIS",
     "MUJI",
     "NINETEEN TEN",
+    "THE NORTH FACE",
+    "ADIDAS",
+    "BURTON",
+    "MACKAGE",
     "SEPHORA",
+    "ALDOSHOES",
+    "LULULEMON",
+    "LEVIS",
     "UNIQLO",
     "ZARA"
   ],
@@ -321,6 +397,9 @@
     "ALIEXPRESS",
     "AMAZON",
     "Amazon",
+    "THE LAST HUNT",
+    "STOCKX",
+    "NOMAD GOODS",
     "AMZN",
     "ETSY",
     "HERSCHEL",

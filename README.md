@@ -26,6 +26,8 @@ RBC now supports downloading statements as CSV files, delimited by `,`. Simply r
 
 ### Visa/Personal Banking Statements Copied From Online Banking
 
+> **DEPRECATED** This no longer works because RBC changed its page layout. This method shouldn't be used at all since it is too tightly coupled with the page layout which is subject to change frequently.
+
 This refers to viewing your transactions from RBC Online Banking in a web browser. Simply copy the rows to a text file. They should be delimited by a tab. Run `parse_tbl.py` against it.
 
 ### Visa Statements in PDF Format
