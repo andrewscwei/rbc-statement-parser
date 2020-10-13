@@ -59,7 +59,7 @@ read_str = optimize_whitespaces(read_str)
 read_str = re.sub(r'({0}) ({1})'.format(regex_date, regex_date), r'\1', read_str)
 
 # Remove the currency exchange info that is before the money amount.
-read_str = re.sub(r'(Foreign Currency.*)({0})'.format(regex_amount), r'\2', read_str)
+# read_str = re.sub(r'(Foreign Currency.*)({0})'.format(regex_amount), r'\2', read_str)
 
 # Rearrange transaction code. The ones who don't have a trsansaction code will
 # have a temporary code of all zeroes.
