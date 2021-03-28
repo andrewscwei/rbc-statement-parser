@@ -18,7 +18,7 @@ Use [VSCode](https://code.visualstudio.com/) with [Python extension](https://mar
 
 ## Preparing Documents for Parsing
 
-Only the following scenarios are supported. For any other scenario this script will not work.
+Only the following use cases are supported. For any other uses cases this script will not work.
 
 ### Visa/Personal Banking Statements in CSV Format
 

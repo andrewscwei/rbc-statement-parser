@@ -77,6 +77,8 @@
     "PORTO CAFE",
     "CAFE LA FORET",
     "COFFEE",
+    "NESPRESSO",
+    "HAYAN MUG",
     "PLATFORM 7",
     "GIGI BLIN",
     "LA CUISSON CAFE",
@@ -142,6 +144,13 @@
   ],
   "Food": [
     "A&W",
+    "MEMORY CORNER",
+    "EARLS",
+    "COM VIETNAMESE",
+    "UBER *EATS",
+    "UBERBV",
+    "UBER *",
+    "UBR*",
     "BLOCK EIGHT",
     "XIN FU TANG",
     "SING SING",
@@ -149,6 +158,7 @@
     "TAPWORKS",
     "EATERY",
     "INDIAN JUNCTION",
+    "TSUJIRI",
     "TAIWAN TAIPEI O",
     "SALT & STRAW",
     "AUTOSTRADA",
@@ -277,6 +287,8 @@
     "UBER EATS",
     "VEGETARIAN",
     "WO FUNG",
+    "UMAMI BURGER",
+    "CURRY",
     "ZAC ZAC"
   ],
   "Groceries": [
@@ -315,10 +327,13 @@
   ],
   "Household/Enhancements": [
     "ASSURED ENVIRONMENTAL",
+    "LOWES",
+    "GARDENWORKS",
     "HOME DEPOT",
     "IKEA",
     "ROOM IN ORDER",
-    "GOT-JUNK"
+    "GOT-JUNK",
+    "BED BATH AND BEYOND"
   ],
   "Income": [
   ],
@@ -352,12 +367,14 @@
   ],
   "Telecom/Home": [
     "SHAW CABLESYSTEMS",
-    "TELECOM"
+    "TELECOM",
+    "TELUS"
   ],
   "Telecom/Mobile": [
     "BELL MOBILITY",
     "FIDO MOBILE",
     "T-MOBILE",
+    "KOODO",
     "FIDO STORE",
     "FIDO Mobile"
   ],
@@ -365,6 +382,7 @@
     "AIRBNB",
     "BCF - TSAWWASSEN",
     "BCF-SWARTZ BAY",
+    "BCF - SALISH",
     "BOOKING.COM",
     "DELTA AIR",
     "HOTEL",
