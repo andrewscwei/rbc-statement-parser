@@ -101,14 +101,14 @@ def redact_lines(s: str) -> str:
 def append_category_eol(line: str, delimiter: str = ' ') -> str:
   '''
   Assigns a category to a line by refering to the JSON dictionary of categoryes.
-  If the category not known, assign "Others" by default. Perform this operation
+  If the category not known, assign "Other" by default. Perform this operation
   in 3 steps:
     1. Add a tag to the beginning of the line. This is used to keep track of
        whether the line has been parsed (parsed line has that tag removed).
     2. Parse the line and append the appropriate category at EOL, separated by
        the specified delimiter.
     3. Check if line has category by seeing if it has the tag in front of it. If
-       so, append "Others" to EOL, separated by the specified delimiter.
+       so, append "Other" to EOL, separated by the specified delimiter.
 
   Arguments:
     line {str} - The line to parse.
@@ -117,7 +117,7 @@ def append_category_eol(line: str, delimiter: str = ' ') -> str:
   Returns:`
     {str} The original line with a category appended to it.
   '''
-  default_category = 'Others'
+  default_category = 'Other'
   tmp_prefix = '<TMP>'
   line = re.sub(r'^(.*)$', r'{}\1'.format(tmp_prefix), line)
 
@@ -138,7 +138,7 @@ def append_category_eol(line: str, delimiter: str = ' ') -> str:
       if subbed > 0: break
     if subbed > 0: break
 
-  line = re.sub(r'^{}(.*)$'.format(tmp_prefix), r'\1' + delimiter + 'Others', line)
+  line = re.sub(r'^{}(.*)$'.format(tmp_prefix), r'\1' + delimiter + 'Other', line)
 
   return line
 

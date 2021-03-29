@@ -9,45 +9,6 @@
     "MOODY ALES",
     "PORTLAND CRAFT"
   ],
-  "Transportation/Gas": [
-    "BOUNDARY TOWN PANTRY",
-    "CHEVRON",
-    "SHELL 3596",
-    "SHELL 5511 GARDEN CITY",
-    "SHELL OIL",
-    "SUPER SAVE GAS"
-  ],
-  "Transportation/Insurance": [
-    "ICBC"
-  ],
-  "Transportation/Loans": [
-    "Personal Loan SPL",
-    "PERSONAL LOAN"
-  ],
-  "Transportation/Maintenance": [
-    "BMS AUTO HAUS",
-    "NONDA",
-    "HERTZ RENT A CAR",
-    "NO. 1 COLLISION",
-    "AUDI",
-    "CDN TIRE",
-    "SENSHA-YA",
-    "SPEEDY GLASS"
-  ],
-  "Transportation/Parking": [
-    "CITY OF PORTLAND",
-    "CITY OF VICTORIA",
-    "PAY BY PHONE",
-    "EASYPARK",
-    "IMPARK",
-    "PARKING",
-    "PAYBYPHONE"
-  ],
-  "Transportation/Penalties": [
-    "CITY OF VAN-BYLAW FINE",
-    "BUSTERS TOWING",
-    "COURT SERVICES"
-  ],
   "Bank/Charges": [
     "ANNUAL FEE",
     "BALANCEPROTECTOR PREMIUM",
@@ -68,9 +29,22 @@
     "Overdraft interest",
     "OD PROTECTION FEE"
   ],
+  "Benefits": [
+    "GST CANADA",
+    "Federal Payment CANADA"
+  ],
   "Business/Admin": [
     "ONESTOP - BCGOV",
     "BC REGISTRY"
+  ],
+  "Business/Events": [
+
+  ],
+  "Business/Income": [
+
+  ],
+  "Business/Shareholder Loan": [
+
   ],
   "Coffee": [
     "BURO VANCOUVER",
@@ -88,10 +62,6 @@
     "STARBUCKS",
     "THE LOAFE",
     "TIM HORTONS"
-  ],
-  "Commute/Public Transit": [
-    "CAR2GO",
-    "TRANSIT"
   ],
   "Digital/Recreation": [
     "NETFLIX",
@@ -127,22 +97,19 @@
     "PEAKDESIGN",
     "SIGNATURE PLASTICS"
   ],
-  "Electronics/Devices": [
+  "Electronics/Gadgets": [
     "APPLE.*STORE",
     "GOPRO"
   ],
   "Electronics/Recreation": [
     "ITUNES"
   ],
-  "Events/Business": [
-
-  ],
-  "Events/Recreation": [
+  "Events": [
     "COMIC CON",
     "COMMODORE BALLROOM",
     "STANLEY PARK"
   ],
-  "Food": [
+  "Food & Drinks": [
     "A&W",
     "MEMORY CORNER",
     "EARLS",
@@ -322,10 +289,13 @@
     "BOARD GAME",
     "BADMINTON"
   ],
-  "Household/Bills": [
-    "FortisBC"
+  "Home/Bills": [
+    "FortisBC",
+    "RICHMOND UTL",
+    "RICHMOND-TAXES",
+    "Hydro Bill"
   ],
-  "Household/Enhancements": [
+  "Home/Improvement": [
     "ASSURED ENVIRONMENTAL",
     "LOWES",
     "GARDENWORKS",
@@ -334,8 +304,6 @@
     "ROOM IN ORDER",
     "GOT-JUNK",
     "BED BATH AND BEYOND"
-  ],
-  "Income": [
   ],
   "Investments/Cryptocurrency": [
     "COINBASE"
@@ -365,36 +333,7 @@
     "CANADA COMPUTERS",
     "OFFICE"
   ],
-  "Telecom/Home": [
-    "SHAW CABLESYSTEMS",
-    "TELECOM",
-    "TELUS"
-  ],
-  "Telecom/Mobile": [
-    "BELL MOBILITY",
-    "FIDO MOBILE",
-    "T-MOBILE",
-    "KOODO",
-    "FIDO STORE",
-    "FIDO Mobile"
-  ],
-  "Travel": [
-    "AIRBNB",
-    "BCF - TSAWWASSEN",
-    "BCF-SWARTZ BAY",
-    "BCF - SALISH",
-    "BOOKING.COM",
-    "DELTA AIR",
-    "HOTEL",
-    "DOLLAR RENT A CAR",
-    "EXPEDIA\\.CA",
-    "TRAVEL",
-    "HILTON SF AIRPORT",
-    "ONLINE BOOKING",
-    "RAILWAY CAF",
-    "USCUSTOMS"
-  ],
-  "Shopping/B&M": [
+  "Shopping/Clothing": [
     "APPAREL",
     "CHAMPS SPORTS",
     "JJ METROPOLIS",
@@ -411,7 +350,7 @@
     "UNIQLO",
     "ZARA"
   ],
-  "Shopping/Online": [
+  "Shopping/Other": [
     "ALIEXPRESS",
     "AMAZON",
     "Amazon",
@@ -425,5 +364,86 @@
     "REDBUBBLE",
     "THE STOWE",
     "TSB SHIPPING"
+  ],
+  "Telecom/Home": [
+    "SHAW CABLESYSTEMS",
+    "TELECOM",
+    "TELUS"
+  ],
+  "Telecom/Mobile": [
+    "BELL MOBILITY",
+    "FIDO MOBILE",
+    "T-MOBILE",
+    "KOODO",
+    "FIDO STORE",
+    "FIDO Mobile"
+  ],
+  "Transportation/Gas": [
+    "BOUNDARY TOWN PANTRY",
+    "CHEVRON",
+    "SHELL 3596",
+    "SHELL 5511 GARDEN CITY",
+    "SHELL OIL",
+    "SUPER SAVE GAS"
+  ],
+  "Transportation/Insurance": [
+    "ICBC"
+  ],
+  "Transportation/Loans": [
+    "Personal Loan SPL",
+    "PERSONAL LOAN"
+  ],
+  "Transportation/Maintenance": [
+    "BMS AUTO HAUS",
+    "NONDA",
+    "HERTZ RENT A CAR",
+    "NO. 1 COLLISION",
+    "AUDI",
+    "CDN TIRE",
+    "SENSHA-YA",
+    "SPEEDY GLASS"
+  ],
+  "Transportation/Parking": [
+    "CITY OF PORTLAND",
+    "CITY OF VICTORIA",
+    "PAY BY PHONE",
+    "EASYPARK",
+    "IMPARK",
+    "PARKING",
+    "PAYBYPHONE"
+  ],
+  "Transportation/Penalties": [
+    "CITY OF VAN-BYLAW FINE",
+    "BUSTERS TOWING",
+    "COURT SERVICES"
+  ],
+  "Transportation/Public Transit": [
+    "CAR2GO",
+    "TRANSIT"
+  ],
+  "Travel/Accommodation": [
+    "AIRBNB",
+    "HOTEL",
+    "HILTON SF AIRPORT"
+  ],
+  "Travel/Activities": [
+
+  ],
+  "Travel/Other": [
+    "TRAVEL",
+    "USCUSTOMS"
+  ],
+  "Travel/Rentals": [
+    "DOLLAR RENT A CAR"
+  ],
+  "Travel/Tickets": [
+    "BCF - TSAWWASSEN",
+    "BCF-SWARTZ BAY",
+    "BCF - SALISH",
+    "BOOKING.COM",
+    "DELTA AIR",
+    "EXPEDIA\\.CA",
+    "ONLINE BOOKING",
+    "RAILWAY CAF"
   ]
 }
