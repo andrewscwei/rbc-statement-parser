@@ -1,4 +1,4 @@
-# rbc-statement-parser
+# RBC Statement Parser
 
 Handy Python scripts for parsing copied and pasted RBC PDF statements, compatible with both VISA and personal banking accounts (i.e. chequing, savings, etc.). The output is a file separated by columns such as **Transaction Date**, **Description**, **Amount**, **Purchase Category**, etc.
 
