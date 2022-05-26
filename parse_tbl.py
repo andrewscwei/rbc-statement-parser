@@ -1,7 +1,6 @@
-# This script parses transaction rows copied directly from RBC online banking
-# from within a web browser. It also works if you copied the rows from a
-# downloaded VISA statement PDF (VISA only) from within Google Drive. See the
-# README for more details.
+# This script parses transaction rows copied directly from RBC online banking from within a web
+# browser. It also works if you copied the rows from a downloaded VISA statement PDF (VISA only)
+# from within Google Drive. See the README for more details.
 
 import re
 import sys
@@ -10,16 +9,15 @@ from typing import Match
 from utils import (append_category_eol, cloc, file_to_str,
                    optimize_whitespaces, redact_lines, str_to_file)
 
-tmp_code = ''.ljust(23, '0')
-
-regex_date = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
-regex_amount = r'-?\$[0-9,]+\.[0-9]{2}'
-regex_code = r'[0-9]{23}'
+TMP_CODE = ''.ljust(23, '0')
+TMP_STR = '<TMP>'
+REGEX_DATE = r'[A-Za-z]{3} [0-9]{2}(?:, )?(?:[0-9]{4})?'
+REGEX_AMOUNT = r'-?\$[0-9,]+\.[0-9]{2}'
+REGEX_CODE = r'[0-9]{23}'
+OUTPUT_ROW_FORMAT = '{date}\t\t\t{code}\t{description}\t{category}\t{amount}'
 
 file_in = sys.argv[1]
 file_out = f'{file_in}-parsed'
-
-output_row_format = '{date}\t\t\t{code}\t{description}\t{category}\t{amount}'
 
 def format_statement(match: Match, with_padding: bool = False) -> str:
   date = match.group(1) if not with_padding else match.group(1).ljust(6)
@@ -29,10 +27,10 @@ def format_statement(match: Match, with_padding: bool = False) -> str:
   category = match.group(5) if not with_padding else match.group(5).ljust(30)
 
   # Strip invalid transaction codes.
-  if code == tmp_code:
+  if code == TMP_CODE:
     code = '' if not with_padding else ''.ljust(23)
 
-  return output_row_format.format(date=date, code=code, description=description, amount=amount, category=category)
+  return OUTPUT_ROW_FORMAT.format(date=date, code=code, description=description, amount=amount, category=category)
 
 def format_statement_with_padding(match: Match) -> str:
   return format_statement(match, True)
@@ -49,38 +47,38 @@ old_cloc = cloc(read_str)
 
 # Format all line chunks so each line starts with the corresponding transaction
 # date. Append a new line at the end for parsing convenience later on.
-read_str = re.sub(r'\n(?!{0})'.format(regex_date), ' ', read_str) + '\n'
+read_str = re.sub(fr'\n(?!{REGEX_DATE})', ' ', read_str) + '\n'
 
 read_str = redact_lines(read_str)
 read_str = optimize_whitespaces(read_str)
 
 # Remove posting date that is before the transaction date and only keep
 # transaction date.
-read_str = re.sub(r'({0}) ({1})'.format(regex_date, regex_date), r'\1', read_str)
+read_str = re.sub(fr'({REGEX_DATE}) ({REGEX_DATE})', r'\1', read_str)
 
 # Remove the currency exchange info that is before the money amount.
-# read_str = re.sub(r'(Foreign Currency.*)({0})'.format(regex_amount), r'\2', read_str)
+# read_str = re.sub(r'(Foreign Currency.*)({0})'.format(REGEX_AMOUNT), r'\2', read_str)
 
 # Rearrange transaction code. The ones who don't have a trsansaction code will
 # have a temporary code of all zeroes.
-read_str = re.sub(r'({0}.*\n)'.format(regex_date), r'{0}\1'.format('<TMP>'), read_str)
-read_str = re.sub(r'{0}({1})(.*)({2})(.*)'.format('<TMP>', regex_date, regex_code), r'\1 \3 \2 \4', read_str)
-read_str = re.sub(r'{0}({1})(.*)'.format('<TMP>', regex_date, regex_code), r'\1 {0} \2'.format(tmp_code), read_str)
+read_str = re.sub(fr'({REGEX_DATE}.*\n)', fr'{TMP_STR}\1', read_str)
+read_str = re.sub(fr'{TMP_STR}({REGEX_DATE})(.*)({REGEX_CODE})(.*)', r'\1 \3 \2 \4', read_str)
+read_str = re.sub(fr'{TMP_STR}({REGEX_DATE})(.*)', fr'\1 {TMP_CODE} \2', read_str)
 
 for line in read_str.splitlines():
-  match = re.findall(r'{0}'.format(regex_amount), line)
+  match = re.findall(fr'{REGEX_AMOUNT}', line)
 
   # If there are more than one money amount detected, only use the first one.
   if match:
-    line = re.sub(r'{0}.*$'.format(regex_amount), '', line)
+    line = re.sub(fr'{REGEX_AMOUNT}.*$', '', line)
     line += f'{ match[0]}'
 
   line = append_category_eol(line)
-  formatted_str = re.sub(r'({0}) +({1}) +(.*) +({2}) +(.*)'.format(regex_date, regex_code, regex_amount), format_statement, line)
+  formatted_str = re.sub(fr'({REGEX_DATE}) +({REGEX_CODE}) +(.*) +({REGEX_AMOUNT}) +(.*)', format_statement, line)
   write_str += formatted_str
   write_str += '\n'
 
-  print(re.sub(r'({0}) +({1}) +(.*) +({2}) +(.*)'.format(regex_date, regex_code, regex_amount), format_statement_with_padding, line))
+  print(re.sub(fr'({REGEX_DATE}) +({REGEX_CODE}) +(.*) +({REGEX_AMOUNT}) +(.*)', format_statement_with_padding, line))
 
 # End parsing.
 str_to_file(write_str, file_out)

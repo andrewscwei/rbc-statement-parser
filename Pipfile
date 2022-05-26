@@ -1,10 +1,10 @@
 [[source]]
-name = "pypi"
 url = "https://pypi.org/simple"
+name = "pypi"
 verify_ssl = true
 
 [dev-packages]
-mypy = "*"
+pylint = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.10"

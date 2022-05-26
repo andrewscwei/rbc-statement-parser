@@ -1,5 +1,5 @@
-# This script parses a CSV file downloaded directly from RBC online banking.
-# See the README for more details.
+# This script parses a CSV file downloaded directly from RBC online banking. See the README for more
+# details.
 
 import re
 import sys
@@ -8,22 +8,22 @@ from typing import List
 from utils import (append_category_eol, cloc, file_to_str,
                    optimize_whitespaces, redact_lines, str_to_file)
 
-input_cols = ['account_type', 'account_number', 'date', 'cheque_number', 'description_1', 'description_2', 'cad', 'usd', 'category']
-input_delimiter = ','
-output_row_format = '{date}\t{account}\t\t{code}\t{description}\t{category}\t{amount}'
+INPUT_COLS = ['account_type', 'account_number', 'date', 'cheque_number', 'description_1', 'description_2', 'cad', 'usd', 'category']
+INPUT_DELIMITER = ','
+OUTPUT_ROW_FORMAT = '{date}\t{account}\t\t{code}\t{description}\t{category}\t{amount}'
 
 file_in = sys.argv[1]
 file_out = f'{file_in}-parsed'
 
 def format_statement(cols: List[str], with_padding: bool = False) -> str:
-  account = cols[input_cols.index('account_type')] + ' ***' + cols[input_cols.index('account_number')][-4:]
-  date = cols[input_cols.index('date')]
-  code = cols[input_cols.index('cheque_number')]
-  description = re.sub(r'"(.*)"', r'\1', cols[input_cols.index('description_1')]) + ' ' + re.sub(r'"(.*)"', r'\1', cols[input_cols.index('description_2')])
-  amount = re.sub(r'^-?(.*)$', r'$\1', cols[input_cols.index('cad')])
-  category = cols[input_cols.index('category')]
+  account = cols[INPUT_COLS.index('account_type')] + ' ***' + cols[INPUT_COLS.index('account_number')][-4:]
+  date = cols[INPUT_COLS.index('date')]
+  code = cols[INPUT_COLS.index('cheque_number')]
+  description = re.sub(r'"(.*)"', r'\1', cols[INPUT_COLS.index('description_1')]) + ' ' + re.sub(r'"(.*)"', r'\1', cols[INPUT_COLS.index('description_2')])
+  amount = re.sub(r'^-?(.*)$', r'$\1', cols[INPUT_COLS.index('cad')])
+  category = cols[INPUT_COLS.index('category')]
 
-  return output_row_format.format(date=date, account=account, code=code, description=description, amount=amount, category=category)
+  return OUTPUT_ROW_FORMAT.format(date=date, account=account, code=code, description=description, amount=amount, category=category)
 
 # Prepare for parsing.
 print(f'Parsing file "{file_in}" > "{file_out}"...')
@@ -39,7 +39,7 @@ read_str = redact_lines(read_str)
 
 for line in read_str.splitlines():
   line = append_category_eol(line, '')
-  cols = line.split(input_delimiter)
+  cols = line.split(INPUT_DELIMITER)
   formatted_str = format_statement(cols)
   write_str += formatted_str
   write_str += '\n'
