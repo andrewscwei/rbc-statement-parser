@@ -52,13 +52,13 @@ The text file is now ready to be parsed by `parse_pdf.py`.
 
 ### ~~Visa/Personal Banking Statements in CSV Format~~
 
-> **DEPRECATED** It doesn't seem like you can easily export CSV files now.
+> **DEPRECATED**: It doesn't seem like you can easily export CSV files now.
 
 RBC now supports downloading statements as CSV files, delimited by `,`. Simply run `parse_csv.py` against them.
 
 ### ~~Visa/Personal Banking Statements Copied From Online Banking~~
 
-> **DEPRECATED** This no longer works because RBC changed its page layout. This method shouldn't be used at all since it is too tightly coupled with the page layout which is subject to change frequently.
+> **DEPRECATED**: This no longer works because RBC changed its page layout. This method shouldn't be used at all since it is too tightly coupled with the page layout which is subject to change frequently.
 
 This refers to viewing your transactions from RBC Online Banking in a web browser. Simply copy the rows to a text file. They should be delimited by a tab (`\t`). Run `parse_tbl.py` against it.
 
