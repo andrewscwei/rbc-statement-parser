@@ -180,3 +180,5 @@ _site
 
 # Ruby
 .ruby-version
+
+.config

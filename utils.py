@@ -1,14 +1,30 @@
 import json
 import re
 
-with open('config/categories.json', encoding='utf8') as json_file:
-  data = json.load(json_file)
-  categories = data
+CATEGORIES = {}
+REMOVE_LINES = []
+REMOVE_WORDS = []
 
-with open('config/excludes.json', encoding='utf8') as json_file:
-  data = json.load(json_file)
-  remove_lines = data['lines']
-  remove_words = data['words']
+try:
+  with open('.config', encoding='utf8') as json_file:
+    data = json.load(json_file)
+
+    try:
+      CATEGORIES = data['categories']
+    except Exception as exc:
+      pass
+
+    try:
+      REMOVE_LINES = data['excludes']['lines']
+    except Exception as exc:
+      pass
+
+    try:
+      REMOVE_WORDS = data['excludes']['words']
+    except Exception as exc:
+      pass
+except Exception as exc:
+  pass
 
 def cloc(str: str) -> int:
   '''
@@ -87,18 +103,18 @@ def redact_lines(str: str) -> str:
     {str} - The redacted string.
   '''
   # Remove unwanted lines.
-  for regex in remove_lines:
+  for regex in REMOVE_LINES:
     str = re.sub(re.compile('%s%s%s' % (r'(.*?)', regex, r'(.*?)\n')), '', str)
 
   # Remove unwanted words.
-  for regex in remove_words:
+  for regex in REMOVE_WORDS:
     str = re.sub(re.compile(regex), '', str)
 
   return str
 
 def append_category_eol(line: str, delimiter: str = ' ') -> str:
   '''
-  Assigns a category to a line by referring to the JSON dictionary of categories. If the category not
+  Assigns a category to a line by referring to the JSON dictionary of CATEGORIES. If the category not
   known, assign "Other" by default. Perform this operation in 3 steps:
     1. Add a tag to the beginning of the line. This is used to keep track of whether the line has
        been parsed (parsed line has that tag removed).
@@ -118,8 +134,8 @@ def append_category_eol(line: str, delimiter: str = ' ') -> str:
   tmp_prefix = '<TMP>'
   line = re.sub(r'^(.*)$', fr'{tmp_prefix}\1', line)
 
-  for category in categories:
-    for regex in categories[category]:
+  for category in CATEGORIES:
+    for regex in CATEGORIES[category]:
       (line, subbed) = re.subn(
         re.compile(f"{tmp_prefix}{r'(.*?'}{regex}{r'.*?)$'}"),
         r'\1' + delimiter + category,

@@ -62,6 +62,42 @@ RBC now supports downloading statements as CSV files, delimited by `,`. Simply r
 
 This refers to viewing your transactions from RBC Online Banking in a web browser. Simply copy the rows to a text file. They should be delimited by a tab (`\t`). Run `parse_tbl.py` against it.
 
+## Defining Categories and Excluding Specific Transactions
+
+Create a `.config` file in project root. This file serves as a lookup JSON file for defining transaction categories and excluding certain transactions from being parsed by matching them with specific lines or keywords. The format is as follows:
+
+```json
+{
+  "categories": {
+    "<category_1_name>": [
+      "<transaction_keywords>",
+      "<transaction_keywords>",
+      "<transaction_keywords>",
+      ...
+    ],
+    "<category_2_name>": [
+      "<transaction_keywords>",
+      "<transaction_keywords>",
+      "<transaction_keywords>",
+      ...
+    ],
+    ...
+  },
+  "excludes": {
+    "lines": [
+    "<some_line_of_text>",
+    "<some_line_of_text>",
+    ...
+    ],
+    "words": [
+      "<some_keyword>",
+      "<some_keyword>",
+      ...
+    ]
+  }
+}
+```
+
 ## Disclaimer
 
 This script only works for **VERY SPECIFIC** cases.
