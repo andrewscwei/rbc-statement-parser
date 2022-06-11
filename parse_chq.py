@@ -1,4 +1,4 @@
-# This script parses a copied chunk from an e-statement PDF of an RBC chequing/saving account. Note
+# This script parses a copied chunk from an e-statement PDF of an RBC chequing/savings account. Note
 # that this script does not work with VISA e-statement PDFs because the format is different.
 #
 # Consider that a single transaction (once copied over) can span over multiple lines. Here are some
@@ -69,30 +69,27 @@ curr_date = None
 # Begin parsing.
 read_str = optimize_whitespaces(read_str)
 
-# Begin parsing the file so that each line ends up corresponding to a
-# transaction.
+# Begin parsing the file so that each line ends up corresponding to a transaction.
 for line in read_str.splitlines():
   line = line.strip()
 
   # Check if line starts with a date.
   m1 = re.search(fr'^{REGEX_DATE}', line)
 
-  # If line starts with a date, cache the date and open a new stream and append
-  # the date to it.
+  # If line starts with a date, cache the date and open a new stream and append the date to it.
   if m1:
     curr_date = m1.group()
     curr_stream = f'{curr_date} '
     line = re.sub(fr'^{REGEX_DATE} +(.*)', r'\1', line)
-  # Otherwise check if this line is a continuation of the previous line. If not
-  # then
+  # Otherwise check if this line is a continuation of the previous line. If not then
   elif curr_stream == '':
     curr_stream = f'{curr_date} '
 
   # Check if remainder of the line ends with a money amount.
   m2 = re.findall(fr'{REGEX_AMOUNT}', line)
 
-  # If it does, the transaction ends here. Append the line (up to the first
-  # money amount) to output and clear it for the next transaction.
+  # If it does, the transaction ends here. Append the line (up to the first money amount) to output
+  # and clear it for the next transaction.
   if m2:
     line = re.sub(fr'{REGEX_AMOUNT}.*$', '', line)
     curr_stream += f'{line} ${m2[0]}'

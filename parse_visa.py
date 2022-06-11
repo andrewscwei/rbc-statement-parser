@@ -1,6 +1,5 @@
-# This script parses transaction rows copied directly from RBC online banking from within a web
-# browser. It also works if you copied the rows from a downloaded VISA statement PDF (VISA only)
-# from within Google Drive. See the README for more details.
+# This script parses a copied chunk from an RBC Visa e-statement PDF. Note that this script does not
+# work with other e-statement types (i.e. chequing or savings).
 
 import re
 import sys
@@ -45,22 +44,21 @@ old_cloc = cloc(read_str)
 
 # Begin parsing.
 
-# Format all line chunks so each line starts with the corresponding transaction
-# date. Append a new line at the end for parsing convenience later on.
+# Format all line chunks so each line starts with the corresponding transaction date. Append a new
+# line at the end for parsing convenience later on.
 read_str = re.sub(fr'\n(?!{REGEX_DATE})', ' ', read_str) + '\n'
 
 read_str = redact_lines(read_str)
 read_str = optimize_whitespaces(read_str)
 
-# Remove posting date that is before the transaction date and only keep
-# transaction date.
+# Remove posting date that is before the transaction date and only keep transaction date.
 read_str = re.sub(fr'({REGEX_DATE}) ({REGEX_DATE})', r'\1', read_str)
 
-# Remove the currency exchange info that is before the money amount.
-# read_str = re.sub(r'(Foreign Currency.*)({0})'.format(REGEX_AMOUNT), r'\2', read_str)
+# Remove the currency exchange info that is before the money amount. read_str = re.sub(r'(Foreign
+# Currency.*)({0})'.format(REGEX_AMOUNT), r'\2', read_str)
 
-# Rearrange transaction code. The ones who don't have a trsansaction code will
-# have a temporary code of all zeroes.
+# Rearrange transaction code. The ones who don't have a transaction code will have a temporary code
+# of all zeroes.
 read_str = re.sub(fr'({REGEX_DATE}.*\n)', fr'{TMP_STR}\1', read_str)
 read_str = re.sub(fr'{TMP_STR}({REGEX_DATE})(.*)({REGEX_CODE})(.*)', r'\1 \3 \2 \4', read_str)
 read_str = re.sub(fr'{TMP_STR}({REGEX_DATE})(.*)', fr'\1 {TMP_CODE} \2', read_str)
