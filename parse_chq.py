@@ -1,35 +1,41 @@
-# This script parses a copied chunk from an e-statement PDF of an RBC chequing/savings account. Note
-# that this script does not work with VISA e-statement PDFs because the format is different.
+# This script parses a copied chunk from an e-statement PDF of an RBC
+# chequing/savings account. Note that this script does not work with VISA
+# e-statement PDFs because the format is different.
 #
-# Consider that a single transaction (once copied over) can span over multiple lines. Here are some
-# known patterns:
-#   1. A complete transaction MAY or MAY NOT begin with a date. If it doesn't begin with a date, its
-#      date is the date of the previous transaction.
-#   2. A complete transaction ALWAYS has AT LEAST one money amount. So it can have more than one,
-#      i.e. a deposit amount followed by the current balance.
+# Consider that a single transaction (once copied over) can span over multiple
+# lines. Here are some known patterns:
+#   1. A complete transaction MAY or MAY NOT begin with a date. If it doesn't
+#      begin with a date, its date is the date of the previous transaction.
+#   2. A complete transaction ALWAYS has AT LEAST one money amount. So it can
+#      have more than one, i.e. a deposit amount followed by the current
+#      balance.
 #   3. A complete transaction ALWAYS ends with a money amount.
 #
 # Given the above info, use the following strategy when parsing:
 #   1. Parse the file line by line.
 #   2. Observe the beginning of line:
-#        a. If it starts with a date, create a new text stream and copy the date + rest of the line
-#           into the stream.
-#        b. If it doesn't start with a date:
-#             i. Check if the text stream is empty. If it is, this is a new transaction with the
-#                same date as the last transaction. Do step 2a with the last known date.
-#             ii. If the text stream is not empty, this is a continuation of the previous line,
-#                 still on the same transaction. Copy the rest of the line to the current text
-#                 stream, which should already contain the previous line.
+#      a. If it starts with a date, create a new text stream and copy the date +
+#         rest of the line into the stream.
+#      b. If it doesn't start with a date:
+#         i. Check if the text stream is empty. If it is, this is a new
+#            transaction with the same date as the last transaction. Do step 2a
+#            with the last known date.
+#         ii. If the text stream is not empty, this is a continuation of the
+#             previous line, still on the same transaction. Copy the rest of the
+#             line to the current text stream, which should already contain the
+#             previous line.
 #   3. Observe the end of line:
-#        a. If it ends with a money amount, the transaction completes. Re-append this line to the
-#           current text stream up to the first found money amount. Discard the rest of the money
-#           amounts in the same line anyway because the second money amount (shouldn't have more
-#           than 2) always represents the balance, which is irrelevant. Append the text stream to
-#           the output as a new line, then clear the text stream.
-#        b. If it doesn't end with a money amount, we are expecting the next line to be a
-#           continuation of the current transaction.
+#      a. If it ends with a money amount, the transaction completes. Re-append
+#         this line to the current text stream up to the first found money
+#         amount. Discard the rest of the money amounts in the same line anyway
+#         because the second money amount (shouldn't have more than 2) always
+#         represents the balance, which is irrelevant. Append the text stream to
+#         the output as a new line, then clear the text stream.
+#      b. If it doesn't end with a money amount, we are expecting the next line
+#         to be a continuation of the current transaction.
 #   4. Repeat from step 1 until all lines are parsed.
-#   5. Now that we have a string with each line corresponding to a transaction, apply bulk parsing.
+#   5. Now that we have a string with each line corresponding to a transaction,
+#      apply bulk parsing.
 
 import re
 import sys
@@ -45,7 +51,7 @@ from utils import (
 )
 
 REGEX_DATE = r"[0-9]{1,2} [A-Z][a-z]{2}"
-REGEX_AMOUNT = r"-?[0-9,]+\.[0-9]{2}"
+REGEX_AMOUNT = r"-?[0-9,]+\.[0-9]{2}(?!%)"
 OUTPUT_ROW_FORMAT = "{date}\t\t\t\t{description}\t{category}\t{amount}"
 
 file_in = sys.argv[1]
@@ -59,7 +65,7 @@ def format_statement(match: Match, with_padding: bool = False) -> str:
     category = match.group(4) if not with_padding else match.group(4).ljust(30)
 
     return OUTPUT_ROW_FORMAT.format(
-        date=date, description=description, amount=amount, category=category
+        date=date, description=description, amount=f"-{amount}", category=category
     )
 
 

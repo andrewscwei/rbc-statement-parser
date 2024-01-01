@@ -1,5 +1,6 @@
-# This script parses a copied chunk from an RBC Visa e-statement PDF. Note that this script does not
-# work with other e-statement types (i.e. chequing or savings).
+# This script parses a copied chunk from an RBC Visa e-statement PDF. Note that
+# this script does not work with other e-statement types (i.e. chequing or
+# savings).
 
 import re
 import sys
@@ -37,7 +38,7 @@ def format_statement(match: Match, with_padding: bool = False) -> str:
         code = "" if not with_padding else "".ljust(23)
 
     return OUTPUT_ROW_FORMAT.format(
-        date=date, code=code, description=description, amount=amount, category=category
+        date=date, code=code, description=description, amount=f"-{amount}", category=category
     )
 
 
