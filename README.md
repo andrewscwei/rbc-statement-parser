@@ -33,7 +33,7 @@ Only the following use cases are supported. For any other uses cases this script
 
 The text file is now ready to be parsed by `parse_visa.py`.
 
-> **WARNING**: You need to do the above exactly as described. Meaning you have to open the PDF from Google Drive and copy the rows to your clipboard from inside the PDF file opened by Google Drive. This is because rows copied by Google Drive has a specific format that is favorable and different from that of other programs. If you copy the rows from another program, say, *macOS Preview*, this script will not work.
+> **WARNING**: You need to do the above exactly as described. Meaning you have to open the PDF from Google Drive and copy the rows to your clipboard from inside the PDF file opened by Google Drive. This is because rows copied by Google Drive has a specific format that is favorable and different from that of other programs. If you copy the rows from another program, say, _macOS Preview_, this script will not work.
 
 ### Personal Banking Statements in PDF Format
 
@@ -47,7 +47,7 @@ This includes accounts such as chequing and savings, where you can deposit/withd
 
 The text file is now ready to be parsed by `parse_chq.py`.
 
-> **WARNING**: You need to do the above exactly as described. Meaning you have to open the PDF from Google Drive and copy the rows to your clipboard from inside the PDF file opened by Google Drive. This is because rows copied by Google Drive has a specific format that is favorable and different from that of other programs. If you copy the rows from another program, say, *macOS Preview*, this script will not work.
+> **WARNING**: You need to do the above exactly as described. Meaning you have to open the PDF from Google Drive and copy the rows to your clipboard from inside the PDF file opened by Google Drive. This is because rows copied by Google Drive has a specific format that is favorable and different from that of other programs. If you copy the rows from another program, say, _macOS Preview_, this script will not work.
 
 ## Defining Categories and Excluding Specific Transactions
 
