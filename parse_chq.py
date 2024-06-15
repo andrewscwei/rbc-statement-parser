@@ -41,13 +41,14 @@ import re
 import sys
 from typing import Match
 
+from parse_config import parse_config
 from utils import (
-    append_category_eol,
-    cloc,
+    append_category,
+    count_lines,
     file_to_str,
-    optimize_whitespaces,
-    redact_lines,
+    filter_lines,
     str_to_file,
+    trim_lines,
 )
 
 REGEX_DATE = r"[0-9]{1,2} [A-Z][a-z]{2}"
@@ -73,72 +74,81 @@ def format_statement_with_padding(match: Match) -> str:
     return format_statement(match, True)
 
 
-# Prepare for parsing.
-print(f'Parsing file "{file_in}" > "{file_out}"...')
-print()
+def main():
+    config = parse_config()
 
-read_str = file_to_str(file_in)
-write_str = ""
-old_cloc = cloc(read_str)
-curr_stream = ""
-curr_date = None
+    # Prepare for parsing.
+    print(f'Parsing file "{file_in}" > "{file_out}"...')
+    print()
 
-# Begin parsing.
-read_str = optimize_whitespaces(read_str)
+    read_str = file_to_str(file_in)
+    write_str = ""
+    old_cloc = count_lines(read_str)
+    curr_stream = ""
+    curr_date = None
 
-# Begin parsing the file so that each line ends up corresponding to a transaction.
-for line in read_str.splitlines():
-    line = line.strip()
+    # Begin parsing.
+    read_str = trim_lines(read_str)
 
-    # Check if line starts with a date.
-    m1 = re.search(rf"^{REGEX_DATE}", line)
+    # Begin parsing the file so that each line ends up corresponding to a transaction.
+    for line in read_str.splitlines():
+        line = line.strip()
 
-    # If line starts with a date, cache the date and open a new stream and append the date to it.
-    if m1:
-        curr_date = m1.group()
-        curr_stream = f"{curr_date} "
-        line = re.sub(rf"^{REGEX_DATE} +(.*)", r"\1", line)
-    # Otherwise check if this line is a continuation of the previous line. If not then
-    elif curr_stream == "":
-        curr_stream = f"{curr_date} "
+        # Check if line starts with a date.
+        m1 = re.search(rf"^{REGEX_DATE}", line)
 
-    # Check if remainder of the line ends with a money amount.
-    m2 = re.findall(rf"{REGEX_AMOUNT}", line)
+        # If line starts with a date, cache the date and open a new stream and append the date to it.
+        if m1:
+            curr_date = m1.group()
+            curr_stream = f"{curr_date} "
+            line = re.sub(rf"^{REGEX_DATE} +(.*)", r"\1", line)
+        # Otherwise check if this line is a continuation of the previous line. If not then
+        elif curr_stream == "":
+            curr_stream = f"{curr_date} "
 
-    # If it does, the transaction ends here. Append the line (up to the first money amount) to output
-    # and clear it for the next transaction.
-    if m2:
-        line = re.sub(rf"{REGEX_AMOUNT}.*$", "", line)
-        curr_stream += f"{line} ${m2[0]}"
-        curr_stream = append_category_eol(curr_stream)
-        formatted_str = re.sub(
-            rf"({REGEX_DATE}) +(.*) +(\${REGEX_AMOUNT}) +(.*)",
-            format_statement,
-            curr_stream,
-        )
-        write_str += formatted_str
-        write_str += "\n"
+        # Check if remainder of the line ends with a money amount.
+        m2 = re.findall(rf"{REGEX_AMOUNT}", line)
 
-        print(
-            re.sub(
+        # If it does, the transaction ends here. Append the line (up to the first money amount) to output
+        # and clear it for the next transaction.
+        if m2:
+            line = re.sub(rf"{REGEX_AMOUNT}.*$", "", line)
+            curr_stream += f"{line} ${m2[0]}"
+            curr_stream = append_category(curr_stream, config["categories"], "Other")
+            formatted_str = re.sub(
                 rf"({REGEX_DATE}) +(.*) +(\${REGEX_AMOUNT}) +(.*)",
-                format_statement_with_padding,
+                format_statement,
                 curr_stream,
             )
-        )
+            write_str += formatted_str
+            write_str += "\n"
 
-        curr_stream = ""
-    else:
-        curr_stream += f" {line}"
+            print(
+                re.sub(
+                    rf"({REGEX_DATE}) +(.*) +(\${REGEX_AMOUNT}) +(.*)",
+                    format_statement_with_padding,
+                    curr_stream,
+                )
+            )
 
-write_str = redact_lines(write_str)
+            curr_stream = ""
+        else:
+            curr_stream += f" {line}"
 
-# End parsing.
-str_to_file(write_str, file_out)
+    write_str = filter_lines(
+        write_str, config["exclude_lines"], config["exclude_words"]
+    )
 
-new_cloc = cloc(write_str) - 1
+    # End parsing.
+    str_to_file(write_str, file_out)
 
-print()
-print(
-    f'Parsing file "{file_in}" > "{file_out}"... OK: {old_cloc} > {new_cloc} entr(ies) in result'
-)
+    new_cloc = count_lines(write_str) - 1
+
+    print()
+    print(
+        f'Parsing file "{file_in}" > "{file_out}"... OK: {old_cloc} > {new_cloc} entr(ies) in result'
+    )
+
+
+if __name__ == "__main__":
+    main()
