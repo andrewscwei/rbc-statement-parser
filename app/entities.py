@@ -3,9 +3,10 @@ from typing import Optional, TypedDict
 
 
 class Transaction(TypedDict):
-    amount: float
-    category: str
-    code: Optional[str]
     date: datetime
+    method: str
     description: str
-    posting_date: Optional[datetime]
+    amount: float
+    category: Optional[str]
+    code: Optional[str]
+    posting_date: datetime
