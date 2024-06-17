@@ -1,5 +1,8 @@
 import re
+from datetime import datetime
 from typing import List
+
+import fitz
 
 
 def count_lines(string: str) -> int:
@@ -103,3 +106,22 @@ def append_category(
     )
 
     return string
+
+
+def str_to_date(string: str):
+    return datetime.strptime(string, "%b %d %Y")
+
+
+def ccy_to_float(ccy: str):
+    return float(ccy.replace("$", "").replace(",", ""))
+
+
+def pdf_to_str(file_path: str) -> str:
+    document = fitz.open(file_path)
+    text = ""
+
+    for page_num in range(len(document)):
+        page = document.load_page(page_num)
+        text += page.get_text()
+
+    return text

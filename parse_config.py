@@ -14,14 +14,10 @@ def parse_config():
                 print(exc)
 
             try:
-                config["exclude_lines"] = data["excludes"]["lines"]
+                config["excludes"] = data["excludes"]
             except Exception as exc:
                 print(exc)
 
-            try:
-                config["exclude_words"] = data["excludes"]["words"]
-            except Exception as exc:
-                print(exc)
     except Exception as exc:
         pass
 
