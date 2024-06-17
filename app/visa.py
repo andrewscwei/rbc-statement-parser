@@ -6,8 +6,8 @@ from .entities import Transaction
 from .utils import match_category, parse_float, read_pdf, should_exclude
 
 PAT_MONTH = r"jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
-PAT_YEAR = r"\d{4}"
 PAT_DAY = r"\d{1,2}"
+PAT_YEAR = r"\d{4}"
 PAT_DATE_SHORT = rf"(?:{PAT_MONTH}) {PAT_DAY}"
 PAT_DATE_LONG = rf"((?:{PAT_MONTH})) ({PAT_DAY})(?:, )?({PAT_YEAR})?"
 PAT_AMOUNT = r"-?\$[\d,]+\.\d{2}"
