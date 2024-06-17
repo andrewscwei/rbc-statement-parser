@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import re
 import sys
@@ -6,66 +7,81 @@ from datetime import datetime
 from typing import Dict, List
 
 from app.entities import Transaction
-from app.utils import ccy_to_float, file_to_str, str_to_date
-from parse_config import parse_config
+from app.utils import ccy_to_float, file_to_str, format_tx, str_to_date
 from utils import str_to_file
 
-REGEX_SHORT_DATE = r"(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) \d{2}"
-REGEX_LONG_DATE = (
+REGEX_DATE_SHORT = r"(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) \d{2}"
+REGEX_DATE_LONG = (
     r"((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)) (\d{2})(?:, )?(\d{4})?"
 )
 REGEX_AMOUNT = r"-?\$[\d,]+\.\d{2}"
 REGEX_CODE = r"\d{23}"
 OUTPUT_ROW_FORMAT = "{date}\t\t\t{code}\t{description}\t{category}\t{amount}"
 
-file_out = f"out.txt"
 
-month_map = {
-    "JAN": 1,
-    "FEB": 2,
-    "MAR": 3,
-    "APR": 4,
-    "MAY": 5,
-    "JUN": 6,
-    "JUL": 7,
-    "AUG": 8,
-    "SEP": 9,
-    "OCT": 10,
-    "NOV": 11,
-    "DEC": 12,
-}
+def parse_config(path: str) -> dict:
+    config = {}
+
+    try:
+        with open(path, encoding="utf8") as json_file:
+            data = json.load(json_file)
+
+            try:
+                config["categories"] = data["categories"]
+            except Exception as exc:
+                print(exc)
+
+            try:
+                config["excludes"] = data["excludes"]
+            except Exception as exc:
+                print(exc)
+    except Exception as exc:
+        pass
+
+    return config
 
 
-def parse_args():
+def parse_files(path: str) -> List[str]:
+    files = []
+
+    if os.path.isdir(path):
+        files = [
+            os.path.abspath(os.path.join(path, f))
+            for f in os.listdir(path)
+            if f.lower().endswith(".pdf")
+        ]
+    elif os.path.isfile(path) and path.lower().endswith(".pdf"):
+        files = [os.path.abspath(path)]
+
+    return files
+
+
+def parse_args() -> tuple[List[str], dict, str]:
     parser = argparse.ArgumentParser(
         description="A script that parses RBC chequing and VISA statements in PDF format and extracts transactions"
     )
 
-    parser.add_argument("path", type=str, help="Path or to PDF or directory of PDFs")
-    files = []
+    parser.add_argument("path", help="Path or to PDF or directory of PDFs")
+    parser.add_argument(
+        "--config", "-c", help="Path to config file", default="config.json"
+    )
+    parser.add_argument("--out", "-o", help="Path to output file", default="out.txt")
 
     args = parser.parse_args()
-
-    if os.path.isdir(args.path):
-        files = [
-            os.path.abspath(os.path.join(args.path, f))
-            for f in os.listdir(args.path)
-            if f.lower().endswith(".pdf")
-        ]
-    elif os.path.isfile(args.path) and args.path.lower().endswith(".pdf"):
-        files = [os.path.abspath(args.path)]
+    config = parse_config(args.config)
+    files = parse_files(args.path)
 
     if len(files) == 0:
         print("No valid PDF files found in the specified directory.")
         sys.exit(1)
 
-    return files
+    return (files, config, args.out)
 
 
-def extract_start_date(raw: str) -> datetime | None:
-    regex = rf"statement from ({REGEX_LONG_DATE}) to ({REGEX_LONG_DATE})"
+def get_start_date(pdf: str) -> datetime | None:
+    regex = rf"statement from ({REGEX_DATE_LONG}) to ({REGEX_DATE_LONG})"
 
-    if match := re.search(regex, raw, re.IGNORECASE):
+    if match := re.search(regex, pdf, re.IGNORECASE):
         end_year = match[8]
         start_month = match[2]
         start_day = match[3]
@@ -76,7 +92,7 @@ def extract_start_date(raw: str) -> datetime | None:
     return None
 
 
-def get_category(description: str, lookup: Dict[str, List[str]] = None) -> str:
+def get_category(description: str, lookup: Dict[str, List[str]] = None) -> str | None:
     if lookup is None:
         lookup = {}
 
@@ -96,28 +112,14 @@ def should_exclude(description: str, lookup: List[str]) -> bool:
     return False
 
 
-def format_tx(tx: Transaction, with_padding: bool = False) -> str:
-    date = tx["date"].strftime("%Y-%m-%d")
-    code = tx["code"] or ""
-    description = tx["description"]
-    amount = f"{tx['amount']:.2f}"
-    category = tx["category"]
-
-    return OUTPUT_ROW_FORMAT.format(
-        date=date if not with_padding else date.ljust(10),
-        code=code if not with_padding else code.ljust(23),
-        description=description if not with_padding else description.ljust(90),
-        amount=amount if not with_padding else amount.ljust(10),
-        category=category if not with_padding else category.ljust(30),
-    )
-
-
 def parse_tx(line: str, start_date: datetime, config: dict) -> Transaction | None:
-    regex = (
-        rf"^({REGEX_SHORT_DATE})\s+?({REGEX_SHORT_DATE})\s+?(.*)\s+?({REGEX_AMOUNT})"
-    )
-
-    if (match := re.match(regex, line, re.IGNORECASE)) is None:
+    if (
+        match := re.match(
+            rf"^({REGEX_DATE_SHORT})\s+?({REGEX_DATE_SHORT})\s+?(.*)\s+?({REGEX_AMOUNT})",
+            line,
+            re.IGNORECASE,
+        )
+    ) is None:
         return None
 
     date = match[1]
@@ -143,46 +145,48 @@ def parse_tx(line: str, start_date: datetime, config: dict) -> Transaction | Non
         "posting_date": str_to_date(f"{posting_date} {tmp_year}"),
     }
 
-    return None if should_exclude(description, config["excludes"]) else tx
+    if should_exclude(description, config["excludes"]):
+        return None
+
+    return tx
 
 
-def parse_pdf(file: str, config: dict) -> List[Transaction]:
-    raw = file_to_str(file)
-    start_date = extract_start_date(raw)
-    txs = []
+def parse_pdf(file_path: str, config: dict) -> List[Transaction]:
+    raw = file_to_str(file_path)
+    start_date = get_start_date(raw)
+    transactions = []
     lines = re.sub(
-        rf"\n(?!{REGEX_SHORT_DATE}\n{REGEX_SHORT_DATE})", " ", raw, 0, re.IGNORECASE
+        rf"\n(?!{REGEX_DATE_SHORT}\n{REGEX_DATE_SHORT})", " ", raw, 0, re.IGNORECASE
     )
 
     for line in lines.split("\n"):
         if match := re.match(
-            rf"^{REGEX_SHORT_DATE}.*?{REGEX_AMOUNT}", line, re.IGNORECASE
+            rf"^{REGEX_DATE_SHORT}.*?{REGEX_AMOUNT}", line, re.IGNORECASE
         ):
             if tx := parse_tx(match[0], start_date, config):
-                txs.append(tx)
+                transactions.append(tx)
 
-    return txs
+    return transactions
 
 
 def main():
-    config = parse_config()
-    files = parse_args()
-    txs = []
-    write_str = ""
+    files, config, out_file = parse_args()
+    transactions = sorted(
+        [tx for file in files for tx in parse_pdf(file, config)],
+        key=lambda tx: tx["date"],
+    )
+    out_str = "\n".join(
+        format_tx(tx, format_str=OUTPUT_ROW_FORMAT, with_padding=True)
+        for tx in transactions
+    )
 
-    for file in files:
-        txs.extend(parse_pdf(file, config))
+    str_to_file(out_str, out_file)
 
-    txs = sorted(txs, key=lambda tx: tx["date"])
-
-    for tx in txs:
-        write_str += format_tx(tx, True) + "\n"
-
-    str_to_file(write_str, file_out)
-
-    print(write_str)
+    print(out_str)
     print()
-    print(f'Parsing files > "{file_out}"... OK: {len(txs)} entr(ies) in result')
+    print(
+        f'Parsing files > "{out_file}"... OK: {len(transactions)} entr(ies) in result'
+    )
 
 
 if __name__ == "__main__":

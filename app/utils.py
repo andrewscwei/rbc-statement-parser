@@ -2,6 +2,8 @@ from datetime import datetime
 
 import fitz
 
+from .entities import Transaction
+
 
 def str_to_date(string: str):
     return datetime.strptime(string, "%b %d %Y")
@@ -37,3 +39,23 @@ def str_to_file(string: str, file_path: str):
     """
     with open(file_path, "w", encoding="utf8") as file:
         file.write(string)
+
+
+def format_tx(
+    tx: Transaction,
+    format_str: str = "{date}\t{code}\t{description}\t{category}\t{amount}",
+    with_padding: bool = False,
+) -> str:
+    date = tx["date"].strftime("%Y-%m-%d")
+    code = tx["code"] or ""
+    description = tx["description"]
+    amount = f"{tx['amount']:.2f}"
+    category = tx["category"]
+
+    return format_str.format(
+        date=date if not with_padding else date.ljust(10),
+        code=code if not with_padding else code.ljust(23),
+        description=description if not with_padding else description.ljust(90),
+        amount=amount if not with_padding else amount.ljust(10),
+        category=category if not with_padding else category.ljust(30),
+    )
