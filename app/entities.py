@@ -1,8 +1,14 @@
 from datetime import datetime
-from typing import Optional, TypedDict
+from typing import Dict, List, Optional, TypedDict
 
 
-class Transaction(TypedDict):
+class Config(TypedDict, total=False):
+    format: Optional[str]
+    categories: Optional[Dict[str, List[str]]]
+    excludes: Optional[List[str]]
+
+
+class Transaction(TypedDict, total=False):
     date: datetime
     method: str
     description: str
