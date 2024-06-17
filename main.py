@@ -57,7 +57,7 @@ def parse_args() -> tuple[List[str], dict, str]:
     parser.add_argument(
         "--config", "-c", help="Path to config file", default="config.json"
     )
-    parser.add_argument("--out", "-o", help="Path to output file", default="out.txt")
+    parser.add_argument("--out", "-o", help="Path to output file")
 
     args = parser.parse_args()
     config = parse_config(args.config)
@@ -85,13 +85,12 @@ def main():
         for tx in transactions
     )
 
-    str_to_file(out_str, out_file)
+    if out_file:
+        str_to_file(out_str, out_file)
 
     print(out_str)
     print()
-    print(
-        f'Parsing files > "{out_file}"... OK: {len(transactions)} entr(ies) in result'
-    )
+    print(f"Parsing statements... OK: {len(transactions)} transaction(s)")
 
 
 if __name__ == "__main__":
