@@ -1,41 +1,23 @@
 import argparse
 import json
 import os
-import re
 import sys
-from typing import List
 
-from app.chequing import parse_chequing
+from app.chequing import is_chequing, parse_chequing
+from app.entities import Config
 from app.utils import format_transaction, write_file
-from app.visa import parse_visa
-
-OUTPUT_ROW_FORMAT = "{date}\t{method}\t\t{code}\t{description}\t{category}\t{amount}"
-PAT_VISA = r"visa"
+from app.visa import is_visa, parse_visa
 
 
-def parse_config(path: str) -> dict:
-    config = {}
-
+def parse_config(path: str) -> Config:
     try:
         with open(path, encoding="utf8") as json_file:
-            data = json.load(json_file)
-
-            try:
-                config["categories"] = data["categories"]
-            except Exception as exc:
-                print(exc)
-
-            try:
-                config["excludes"] = data["excludes"]
-            except Exception as exc:
-                print(exc)
-    except Exception as exc:
-        pass
-
-    return config
+            return json.load(json_file)
+    except Exception as _:
+        return {}
 
 
-def parse_files(path: str) -> List[str]:
+def parse_files(path: str) -> list:
     files = []
 
     if os.path.isdir(path):
@@ -50,7 +32,7 @@ def parse_files(path: str) -> List[str]:
     return files
 
 
-def parse_args() -> tuple[List[str], dict, str]:
+def parse_args() -> tuple[list, dict, str]:
     parser = argparse.ArgumentParser(
         description="A script that parses RBC chequing and VISA statements in PDF format and extracts transactions"
     )
@@ -70,11 +52,14 @@ def parse_args() -> tuple[List[str], dict, str]:
     return (files, config, args.out)
 
 
-def is_visa(pdf: str) -> bool:
-    if re.search(PAT_VISA, pdf, re.IGNORECASE):
-        return True
+def parse_pdf(file_path: str, categories: dict, excludes: list) -> list:
+    if is_chequing(file_path):
+        return parse_chequing(file_path, categories, excludes)
 
-    return False
+    if is_visa(file_path):
+        return parse_visa(file_path, categories, excludes)
+
+    return []
 
 
 def main():
@@ -83,16 +68,17 @@ def main():
         [
             tx
             for file in files
-            for tx in (
-                parse_visa(file, config["categories"], config["excludes"])
-                if is_visa(file)
-                else parse_chequing(file, config["categories"], config["excludes"])
-            )
+            for tx in parse_pdf(file, config.get("categories"), config.get("excludes"))
         ],
         key=lambda tx: tx["date"],
     )
     out_str = "\n".join(
-        format_transaction(tx, template=OUTPUT_ROW_FORMAT, padding=True)
+        format_transaction(
+            tx,
+            template=config.get("format"),
+            default_category="Other",
+            padding=True,
+        )
         for tx in transactions
     )
 

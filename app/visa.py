@@ -5,6 +5,7 @@ from typing import List, Optional
 from .entities import Transaction
 from .utils import match_category, parse_float, read_pdf, should_exclude
 
+PAT_FILE_PATH = r"visa statement"
 PAT_MONTH = r"jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
 PAT_DAY = r"\d{1,2}"
 PAT_YEAR = r"\d{4}"
@@ -12,6 +13,10 @@ PAT_DATE_SHORT = rf"(?:{PAT_MONTH}) {PAT_DAY}"
 PAT_DATE_LONG = rf"((?:{PAT_MONTH})) ({PAT_DAY})(?:, )?({PAT_YEAR})?"
 PAT_AMOUNT = r"-?\$[\d,]+\.\d{2}"
 PAT_CODE = r"\d{23}"
+
+
+def is_visa(file_path: str) -> bool:
+    return bool(re.search(PAT_FILE_PATH, file_path, re.IGNORECASE))
 
 
 def extract_start_date(pdf: str) -> Optional[datetime]:

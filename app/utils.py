@@ -63,7 +63,7 @@ def should_exclude(description: str, lookup: list) -> bool:
 def format_transaction(
     tx: Transaction,
     template: str = "{date}\t{method}\t{code}\t{description}\t{category}\t{amount}",
-    default_category: str = "Other",
+    default_category: str = "",
     padding: bool = False,
 ) -> str:
     amount = f"{tx.get('amount'):.2f}"
