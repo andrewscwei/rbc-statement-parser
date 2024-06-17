@@ -46,7 +46,7 @@ def write_file(string: str, file_path: str):
 def match_category(description: str, lookup: dict) -> Optional[str]:
     for category in lookup:
         for regex in lookup[category]:
-            if re.match(regex, description, re.IGNORECASE):
+            if re.search(regex, description, re.IGNORECASE):
                 return category
 
     return None
@@ -62,18 +62,21 @@ def should_exclude(description: str, lookup: list) -> bool:
 
 def format_transaction(
     tx: Transaction,
-    template: str = "{date}\t{code}\t{description}\t{category}\t{amount}",
+    template: str = "{date}\t{method}\t{code}\t{description}\t{category}\t{amount}",
+    default_category: str = "Other",
     padding: bool = False,
 ) -> str:
-    amount = f"{tx['amount']:.2f}"
-    category = tx["category"]
-    code = tx["code"] or ""
-    date = tx["date"].strftime("%Y-%m-%d")
-    description = tx["description"]
-    posting_date = tx["posting_date"].strftime("%Y-%m-%d")
+    amount = f"{tx.get('amount'):.2f}"
+    method = tx.get("method")
+    category = tx.get("category") or default_category
+    code = tx.get("code") or ""
+    date = tx.get("date").strftime("%Y-%m-%d")
+    description = tx.get("description")
+    posting_date = tx.get("posting_date").strftime("%Y-%m-%d")
 
     return template.format(
         amount=amount if not padding else amount.ljust(10),
+        method=method if not padding else method.ljust(10),
         category=category if not padding else category.ljust(30),
         code=code if not padding else code.ljust(23),
         date=date if not padding else date.ljust(10),

@@ -56,6 +56,7 @@ def parse_transaction(
 
     return {
         "amount": parse_float(amount) * -1,
+        "method": "visa",
         "category": category,
         "code": code,
         "date": parse_date(f"{date} {ref_year}"),
@@ -81,7 +82,7 @@ def parse_visa(
 
     transactions = [
         tx
-        for line in lines.split("\n")
+        for line in lines.splitlines()
         if (tx := parse_transaction(line, start_date, categories or {}, excludes or []))
     ]
 

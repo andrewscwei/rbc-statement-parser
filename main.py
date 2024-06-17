@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import re
 import sys
 from typing import List
 
@@ -8,7 +9,8 @@ from app.chequing import parse_chequing
 from app.utils import format_transaction, write_file
 from app.visa import parse_visa
 
-OUTPUT_ROW_FORMAT = "{date}\t\t\t{code}\t{description}\t{category}\t{amount}"
+OUTPUT_ROW_FORMAT = "{date}\t{method}\t\t{code}\t{description}\t{category}\t{amount}"
+PAT_VISA = r"visa"
 
 
 def parse_config(path: str) -> dict:
@@ -54,9 +56,7 @@ def parse_args() -> tuple[List[str], dict, str]:
     )
 
     parser.add_argument("path", help="Path or to PDF or directory of PDFs")
-    parser.add_argument(
-        "--config", "-c", help="Path to config file", default="config.json"
-    )
+    parser.add_argument("--config", "-c", help="Path to config file", default=".rc")
     parser.add_argument("--out", "-o", help="Path to output file")
 
     args = parser.parse_args()
@@ -70,14 +70,24 @@ def parse_args() -> tuple[List[str], dict, str]:
     return (files, config, args.out)
 
 
+def is_visa(pdf: str) -> bool:
+    if re.search(PAT_VISA, pdf, re.IGNORECASE):
+        return True
+
+    return False
+
+
 def main():
     files, config, out_file = parse_args()
     transactions = sorted(
         [
             tx
             for file in files
-            for tx in parse_visa(file, config["categories"], config["excludes"])
-            # for tx in parse_chequing(file, config["categories"], config["excludes"])
+            for tx in (
+                parse_visa(file, config["categories"], config["excludes"])
+                if is_visa(file)
+                else parse_chequing(file, config["categories"], config["excludes"])
+            )
         ],
         key=lambda tx: tx["date"],
     )
