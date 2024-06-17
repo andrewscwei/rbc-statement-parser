@@ -1,30 +1,36 @@
+import os
 import re
-from datetime import datetime
-from typing import Dict, List
+from typing import Optional
 
 import fitz
 
 from .entities import Transaction
 
 
-def str_to_date(string: str):
-    return datetime.strptime(string, "%b %d %Y")
+def parse_float(string: str):
+    return float(string.replace("$", "").replace(",", ""))
 
 
-def ccy_to_float(ccy: str):
-    return float(ccy.replace("$", "").replace(",", ""))
+def read_pdf(pdf_path: str, html: bool = False) -> str:
+    if not os.path.exists(pdf_path):
+        raise Exception(f"File {pdf_path} not found")
+
+    if not pdf_path.lower().endswith(".pdf"):
+        raise Exception(f"File {pdf_path} is not a recognized PDF")
+
+    document = fitz.open(pdf_path)
+    string = ""
+
+    for page_num in range(len(document)):
+        page = document.load_page(page_num)
+        string += page.get_text("html" if html else "text")
+
+    return string
 
 
-def file_to_str(file_path: str) -> str:
-    if file_path.lower().endswith(".pdf"):
-        document = fitz.open(file_path)
-        string = ""
-
-        for page_num in range(len(document)):
-            page = document.load_page(page_num)
-            string += page.get_text("text")
-
-        return string
+def read_file(file_path: str) -> str:
+    if not os.path.exists(file_path):
+        raise Exception(f"File {file_path} not found")
 
     with open(file_path, "r", encoding="utf8") as file:
         string = file.read()
@@ -32,35 +38,12 @@ def file_to_str(file_path: str) -> str:
     return string
 
 
-def str_to_file(string: str, file_path: str):
+def write_file(string: str, file_path: str):
     with open(file_path, "w", encoding="utf8") as file:
         file.write(string)
 
 
-def format_tx(
-    tx: Transaction,
-    format_str: str = "{date}\t{code}\t{description}\t{category}\t{amount}",
-    with_padding: bool = False,
-) -> str:
-    date = tx["date"].strftime("%Y-%m-%d")
-    code = tx["code"] or ""
-    description = tx["description"]
-    amount = f"{tx['amount']:.2f}"
-    category = tx["category"]
-
-    return format_str.format(
-        date=date if not with_padding else date.ljust(10),
-        code=code if not with_padding else code.ljust(23),
-        description=description if not with_padding else description.ljust(90),
-        amount=amount if not with_padding else amount.ljust(10),
-        category=category if not with_padding else category.ljust(30),
-    )
-
-
-def match_category(description: str, lookup: Dict[str, List[str]] = None) -> str | None:
-    if lookup is None:
-        lookup = {}
-
+def match_category(description: str, lookup: dict) -> Optional[str]:
     for category in lookup:
         for regex in lookup[category]:
             if re.match(regex, description, re.IGNORECASE):
@@ -69,12 +52,31 @@ def match_category(description: str, lookup: Dict[str, List[str]] = None) -> str
     return None
 
 
-def should_exclude(description: str, lookup: List[str] = None) -> bool:
-    if lookup is None:
-        lookup = []
-
+def should_exclude(description: str, lookup: list) -> bool:
     for regex in lookup:
         if re.match(regex, description, re.IGNORECASE):
             return True
 
     return False
+
+
+def format_transaction(
+    tx: Transaction,
+    template: str = "{date}\t{code}\t{description}\t{category}\t{amount}",
+    padding: bool = False,
+) -> str:
+    amount = f"{tx['amount']:.2f}"
+    category = tx["category"]
+    code = tx["code"] or ""
+    date = tx["date"].strftime("%Y-%m-%d")
+    description = tx["description"]
+    posting_date = tx["posting_date"].strftime("%Y-%m-%d")
+
+    return template.format(
+        amount=amount if not padding else amount.ljust(10),
+        category=category if not padding else category.ljust(30),
+        code=code if not padding else code.ljust(23),
+        date=date if not padding else date.ljust(10),
+        description=description if not padding else description.ljust(90),
+        posting_date=posting_date if not padding else posting_date.ljust(10),
+    )

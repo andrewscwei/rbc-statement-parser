@@ -1,26 +1,21 @@
 import re
 from datetime import datetime
-from typing import Dict, List
+from typing import List, Optional
 
 from .entities import Transaction
-from .utils import (
-    ccy_to_float,
-    file_to_str,
-    match_category,
-    should_exclude,
-    str_to_date,
-)
+from .utils import match_category, parse_float, read_pdf, should_exclude
 
-REGEX_DATE_SHORT = r"(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) \d{2}"
-REGEX_DATE_LONG = (
-    r"((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)) (\d{2})(?:, )?(\d{4})?"
-)
-REGEX_AMOUNT = r"-?\$[\d,]+\.\d{2}"
-REGEX_CODE = r"\d{23}"
+PAT_MONTH = r"jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
+PAT_YEAR = r"\d{4}"
+PAT_DAY = r"\d{1,2}"
+PAT_DATE_SHORT = rf"(?:{PAT_MONTH}) {PAT_DAY}"
+PAT_DATE_LONG = rf"((?:{PAT_MONTH})) ({PAT_DAY})(?:, )?({PAT_YEAR})?"
+PAT_AMOUNT = r"-?\$[\d,]+\.\d{2}"
+PAT_CODE = r"\d{23}"
 
 
-def get_start_date(pdf: str) -> datetime | None:
-    regex = rf"statement from ({REGEX_DATE_LONG}) to ({REGEX_DATE_LONG})"
+def extract_start_date(pdf: str) -> Optional[datetime]:
+    regex = rf"statement from ({PAT_DATE_LONG}) to ({PAT_DATE_LONG})"
 
     if match := re.search(regex, pdf, re.IGNORECASE):
         end_year = match[8]
@@ -28,72 +23,66 @@ def get_start_date(pdf: str) -> datetime | None:
         start_day = match[3]
         start_year = match[4] or end_year
 
-        return str_to_date(f"{start_month} {start_day} {start_year}")
+        return parse_date(f"{start_month} {start_day} {start_year}")
 
     return None
 
 
-def parse_tx(
+def parse_date(string: str) -> datetime:
+    return datetime.strptime(string, "%b %d %Y")
+
+
+def parse_transaction(
     line: str,
     start_date: datetime,
-    categories: Dict[str, List[str]] = None,
-    excludes: List[str] = None,
-) -> Transaction | None:
-    if (
-        match := re.match(
-            rf"^({REGEX_DATE_SHORT})\s+?({REGEX_DATE_SHORT})\s+?(.*)\s+?({REGEX_AMOUNT})",
-            line,
-            re.IGNORECASE,
-        )
-    ) is None:
+    categories: dict,
+    excludes: list,
+) -> Optional[Transaction]:
+    pat = rf"^({PAT_DATE_SHORT})\s+?({PAT_DATE_SHORT})\s+?(.*?)\s+?({PAT_AMOUNT})"
+
+    if (match := re.match(pat, line, re.IGNORECASE)) is None:
         return None
 
-    date = match[1]
-    posting_date = match[2]
-    body = match[3]
-    code = res.group(0) if (res := re.search(REGEX_CODE, body, re.IGNORECASE)) else None
+    date, posting_date, body, amount = match.groups()
+    code = res.group(0) if (res := re.search(PAT_CODE, body, re.IGNORECASE)) else None
     description = body.replace(f" {code}", "") if code else body
-    amount = match[4]
-    category = match_category(description, categories) or "Other"
 
-    tmp_year = start_date.year
-    tmp_date = str_to_date(f"{date} {start_date.year}")
+    if should_exclude(description, lookup=excludes):
+        return None
 
-    if tmp_date.month < start_date.month:
-        tmp_year += 1
+    category = match_category(description, lookup=categories) or "Other"
+    ref_date = parse_date(f"{date} {start_date.year}")
+    ref_year = start_date.year + (1 if ref_date.month < start_date.month else 0)
 
-    tx: Transaction = {
-        "amount": ccy_to_float(amount),
+    return {
+        "amount": parse_float(amount) * -1,
         "category": category,
         "code": code,
-        "date": str_to_date(f"{date} {tmp_year}"),
+        "date": parse_date(f"{date} {ref_year}"),
         "description": description,
-        "posting_date": str_to_date(f"{posting_date} {tmp_year}"),
+        "posting_date": parse_date(f"{posting_date} {ref_year}"),
     }
-
-    if should_exclude(description, excludes):
-        return None
-
-    return tx
 
 
 def parse_visa(
-    file_path: str,
-    categories: Dict[str, List[str]] = None,
-    excludes: List[str] = None,
+    pdf_path: str,
+    categories: Optional[dict],
+    excludes: Optional[list],
 ) -> List[Transaction]:
-    raw = file_to_str(file_path)
-    start_date = get_start_date(raw)
-    transactions = []
+    pdf = read_pdf(pdf_path)
+    start_date = extract_start_date(pdf)
+
     lines = re.sub(
-        rf"\n(?!{REGEX_DATE_SHORT}\n{REGEX_DATE_SHORT})", " ", raw, 0, re.IGNORECASE
+        rf"\n(?!{PAT_DATE_SHORT}\n{PAT_DATE_SHORT})",
+        " ",
+        pdf,
+        flags=re.IGNORECASE,
     )
 
-    for line in lines.split("\n"):
-        if match := re.match(
-            rf"^{REGEX_DATE_SHORT}.*?{REGEX_AMOUNT}", line, re.IGNORECASE
-        ):
-            if tx := parse_tx(match[0], start_date, categories, excludes):
-                transactions.append(tx)
+    transactions = [
+        tx
+        for line in lines.split("\n")
+        if (tx := parse_transaction(line, start_date, categories or {}, excludes or []))
+    ]
 
     return transactions
