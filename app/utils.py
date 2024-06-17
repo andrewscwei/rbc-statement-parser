@@ -1,4 +1,6 @@
+import re
 from datetime import datetime
+from typing import Dict, List
 
 import fitz
 
@@ -14,16 +16,13 @@ def ccy_to_float(ccy: str):
 
 
 def file_to_str(file_path: str) -> str:
-    """
-    Reads a file and returns it as a string.
-    """
     if file_path.lower().endswith(".pdf"):
         document = fitz.open(file_path)
         string = ""
 
         for page_num in range(len(document)):
             page = document.load_page(page_num)
-            string += page.get_text()
+            string += page.get_text("text")
 
         return string
 
@@ -34,9 +33,6 @@ def file_to_str(file_path: str) -> str:
 
 
 def str_to_file(string: str, file_path: str):
-    """
-    Writes a string to a file.
-    """
     with open(file_path, "w", encoding="utf8") as file:
         file.write(string)
 
@@ -59,3 +55,26 @@ def format_tx(
         amount=amount if not with_padding else amount.ljust(10),
         category=category if not with_padding else category.ljust(30),
     )
+
+
+def match_category(description: str, lookup: Dict[str, List[str]] = None) -> str | None:
+    if lookup is None:
+        lookup = {}
+
+    for category in lookup:
+        for regex in lookup[category]:
+            if re.match(regex, description, re.IGNORECASE):
+                return category
+
+    return None
+
+
+def should_exclude(description: str, lookup: List[str] = None) -> bool:
+    if lookup is None:
+        lookup = []
+
+    for regex in lookup:
+        if re.match(regex, description, re.IGNORECASE):
+            return True
+
+    return False

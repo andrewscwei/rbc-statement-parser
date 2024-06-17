@@ -4,7 +4,7 @@ from typing import TypedDict
 
 class Transaction(TypedDict):
     amount: float
-    category: str
+    category: str | None
     code: str | None
     date: datetime
     description: str

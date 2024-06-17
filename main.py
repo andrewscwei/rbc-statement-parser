@@ -1,21 +1,13 @@
 import argparse
 import json
 import os
-import re
 import sys
-from datetime import datetime
-from typing import Dict, List
+from typing import List
 
-from app.entities import Transaction
-from app.utils import ccy_to_float, file_to_str, format_tx, str_to_date
+from app.utils import format_tx
+from app.visa import parse_visa
 from utils import str_to_file
 
-REGEX_DATE_SHORT = r"(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) \d{2}"
-REGEX_DATE_LONG = (
-    r"((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)) (\d{2})(?:, )?(\d{4})?"
-)
-REGEX_AMOUNT = r"-?\$[\d,]+\.\d{2}"
-REGEX_CODE = r"\d{23}"
 OUTPUT_ROW_FORMAT = "{date}\t\t\t{code}\t{description}\t{category}\t{amount}"
 
 
@@ -78,101 +70,14 @@ def parse_args() -> tuple[List[str], dict, str]:
     return (files, config, args.out)
 
 
-def get_start_date(pdf: str) -> datetime | None:
-    regex = rf"statement from ({REGEX_DATE_LONG}) to ({REGEX_DATE_LONG})"
-
-    if match := re.search(regex, pdf, re.IGNORECASE):
-        end_year = match[8]
-        start_month = match[2]
-        start_day = match[3]
-        start_year = match[4] or end_year
-
-        return str_to_date(f"{start_month} {start_day} {start_year}")
-
-    return None
-
-
-def get_category(description: str, lookup: Dict[str, List[str]] = None) -> str | None:
-    if lookup is None:
-        lookup = {}
-
-    for category in lookup:
-        for regex in lookup[category]:
-            if re.match(regex, description, re.IGNORECASE):
-                return category
-
-    return None
-
-
-def should_exclude(description: str, lookup: List[str]) -> bool:
-    for regex in lookup:
-        if re.match(regex, description, re.IGNORECASE):
-            return True
-
-    return False
-
-
-def parse_tx(line: str, start_date: datetime, config: dict) -> Transaction | None:
-    if (
-        match := re.match(
-            rf"^({REGEX_DATE_SHORT})\s+?({REGEX_DATE_SHORT})\s+?(.*)\s+?({REGEX_AMOUNT})",
-            line,
-            re.IGNORECASE,
-        )
-    ) is None:
-        return None
-
-    date = match[1]
-    posting_date = match[2]
-    body = match[3]
-    code = res.group(0) if (res := re.search(REGEX_CODE, body, re.IGNORECASE)) else None
-    description = body.replace(f" {code}", "") if code else body
-    amount = match[4]
-    category = get_category(description, config["categories"]) or "Other"
-
-    tmp_year = start_date.year
-    tmp_date = str_to_date(f"{date} {start_date.year}")
-
-    if tmp_date.month < start_date.month:
-        tmp_year += 1
-
-    tx: Transaction = {
-        "amount": ccy_to_float(amount),
-        "category": category,
-        "code": code,
-        "date": str_to_date(f"{date} {tmp_year}"),
-        "description": description,
-        "posting_date": str_to_date(f"{posting_date} {tmp_year}"),
-    }
-
-    if should_exclude(description, config["excludes"]):
-        return None
-
-    return tx
-
-
-def parse_pdf(file_path: str, config: dict) -> List[Transaction]:
-    raw = file_to_str(file_path)
-    start_date = get_start_date(raw)
-    transactions = []
-    lines = re.sub(
-        rf"\n(?!{REGEX_DATE_SHORT}\n{REGEX_DATE_SHORT})", " ", raw, 0, re.IGNORECASE
-    )
-
-    for line in lines.split("\n"):
-        if match := re.match(
-            rf"^{REGEX_DATE_SHORT}.*?{REGEX_AMOUNT}", line, re.IGNORECASE
-        ):
-            if tx := parse_tx(match[0], start_date, config):
-                transactions.append(tx)
-
-    return transactions
-
-
 def main():
     files, config, out_file = parse_args()
     transactions = sorted(
-        [tx for file in files for tx in parse_pdf(file, config)],
+        [
+            tx
+            for file in files
+            for tx in parse_visa(file, config["categories"], config["excludes"])
+        ],
         key=lambda tx: tx["date"],
     )
     out_str = "\n".join(
