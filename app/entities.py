@@ -1,11 +1,11 @@
 from datetime import datetime
-from typing import TypedDict
+from typing import Optional, TypedDict
 
 
 class Transaction(TypedDict):
     amount: float
-    category: str | None
-    code: str | None
+    category: str
+    code: Optional[str]
     date: datetime
     description: str
-    posting_date: datetime
+    posting_date: Optional[datetime]

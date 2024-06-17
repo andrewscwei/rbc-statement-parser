@@ -4,9 +4,9 @@ import os
 import sys
 from typing import List
 
-from app.utils import format_tx
+from app.chequing import parse_chequing
+from app.utils import format_transaction, write_file
 from app.visa import parse_visa
-from utils import str_to_file
 
 OUTPUT_ROW_FORMAT = "{date}\t\t\t{code}\t{description}\t{category}\t{amount}"
 
@@ -77,16 +77,17 @@ def main():
             tx
             for file in files
             for tx in parse_visa(file, config["categories"], config["excludes"])
+            # for tx in parse_chequing(file, config["categories"], config["excludes"])
         ],
         key=lambda tx: tx["date"],
     )
     out_str = "\n".join(
-        format_tx(tx, format_str=OUTPUT_ROW_FORMAT, with_padding=True)
+        format_transaction(tx, template=OUTPUT_ROW_FORMAT, padding=True)
         for tx in transactions
     )
 
     if out_file:
-        str_to_file(out_str, out_file)
+        write_file(out_str, out_file)
 
     print(out_str)
     print()
