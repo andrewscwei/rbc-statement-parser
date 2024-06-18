@@ -1,0 +1,51 @@
+name: Release
+on:
+  push:
+    branches: [master]
+permissions:
+  contents: write
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_USER: github-actions[bot]
+      GITHUB_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+      - name: Release semantic version
+        run: npx semantic-release
+      - name: Release major version
+        run: |
+          VERSION="$(git tag --points-at ${{ github.sha }})"
+
+          if [ -z $VERSION ]; then
+            echo "No major version to publish" >> $GITHUB_STEP_SUMMARY
+          else
+            MAJOR_VERSION="$(cut -d '.' -f 1 <<< "$VERSION")"
+
+            git config user.name "${GITHUB_USER}"
+            git config user.email "${GITHUB_EMAIL}"
+            git tag -fa ${MAJOR_VERSION} -m "Map ${MAJOR_VERSION} to ${VERSION}"
+            git push origin ${MAJOR_VERSION} --force
+
+            echo "Successfully published semantic version \`$VERSION\` and major version \`$MAJOR_VERSION\`" >> $GITHUB_STEP_SUMMARY
+          fi
+  notify:
+    needs: [release]
+    name: Notify
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: andrewscwei/telegram-action@v1
+        with:
+          success: ${{ needs.release.result == 'success' }}
+          cancelled: ${{ needs.release.result == 'cancelled' }}
+          bot-token: ${{ secrets.TELEGRAM_DEVOPS_BOT_TOKEN }}
+          chat-id: ${{ secrets.TELEGRAM_DEVOPS_CHAT_ID }}
