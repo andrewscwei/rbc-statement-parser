@@ -1,6 +1,6 @@
 # RBC Statement Parser
 
-Python script for parsing RBC PDF statements, compatible with both VISA and personal banking accounts (i.e. chequing, savings, etc.). The output is a list of formatted transactions printed on console or output to a file.
+Python script for parsing RBC PDF statements, compatible with both VISA and personal banking accounts (i.e. chequing, savings, etc). The output is a list of formatted transactions printed on console or output to a file.
 
 ## Setup
 
