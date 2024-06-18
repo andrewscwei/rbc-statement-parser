@@ -27,7 +27,7 @@ $ python main.py <pdf_file_or_dir_of_pdf_files> -o out.txt
 
 Create a `.rc` file in project root. You can also provide another file name and pass it to `--config` or `-c` option flag when executing `main.py`. See below example to understand what this config does:
 
-```json
+```js
 {
   // String format of each transaction in the output, the following is the
   // default.
