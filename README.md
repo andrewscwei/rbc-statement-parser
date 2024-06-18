@@ -15,7 +15,7 @@ $ pipenv shell
 
 Download PDF statements from RBC and save them in a directory.
 
-```
+```sh
 # Parse PDF(s) and output to console
 $ python main.py <pdf_file_or_dir_of_pdf_files>
 
