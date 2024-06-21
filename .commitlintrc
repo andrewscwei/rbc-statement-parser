@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "subject-case": [
+      2,
+      "never"
+    ]
+  }
+}

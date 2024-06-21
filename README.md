@@ -7,6 +7,7 @@ Python script for parsing RBC PDF statements, compatible with both VISA and pers
 Set up environment:
 
 ```sh
+$ pre-commit install
 $ pipenv install -d
 $ pipenv shell
 ```
