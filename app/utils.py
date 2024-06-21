@@ -13,10 +13,10 @@ def parse_float(string: str):
 
 def read_pdf(pdf_path: str, html: bool = False) -> str:
     if not os.path.exists(pdf_path):
-        raise Exception(f"File {pdf_path} not found")
+        raise FileNotFoundError(f"File {pdf_path} not found")
 
     if not pdf_path.lower().endswith(".pdf"):
-        raise Exception(f"File {pdf_path} is not a recognized PDF")
+        raise TypeError(f"File {pdf_path} is not a recognized PDF")
 
     document = fitz.open(pdf_path)
     string = ""
@@ -30,7 +30,7 @@ def read_pdf(pdf_path: str, html: bool = False) -> str:
 
 def read_file(file_path: str) -> str:
     if not os.path.exists(file_path):
-        raise Exception(f"File {file_path} not found")
+        raise FileNotFoundError(f"File {file_path} not found")
 
     with open(file_path, "r", encoding="utf8") as file:
         string = file.read()

@@ -13,7 +13,7 @@ def parse_config(path: str) -> Config:
     try:
         with open(path, encoding="utf8") as json_file:
             return json.load(json_file)
-    except Exception as _:
+    except Exception:
         return {}
 
 

@@ -43,9 +43,13 @@ def parse_transaction(
     categories: dict,
     excludes: list,
 ) -> Optional[Transaction]:
-    pat = rf"^({PAT_DATE_SHORT})\s+?({PAT_DATE_SHORT})\s+?(.*?)\s+?({PAT_AMOUNT})"
-
-    if (match := re.match(pat, line, re.IGNORECASE)) is None:
+    if (
+        match := re.match(
+            rf"^({PAT_DATE_SHORT})\s+?({PAT_DATE_SHORT})\s+?(.*?)\s+?({PAT_AMOUNT})",
+            line,
+            re.IGNORECASE,
+        )
+    ) is None:
         return None
 
     date, posting_date, body, amount = match.groups()
