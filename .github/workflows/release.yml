@@ -23,7 +23,7 @@ jobs:
         run: npx semantic-release
       - name: Release major version
         run: |
-          VERSION="$(git tag --points-at ${{ github.sha }})"
+          VERSION="$(git tag --points-at $(git rev-parse HEAD))"
 
           if [ -z $VERSION ]; then
             echo "No major version to publish" >> $GITHUB_STEP_SUMMARY
