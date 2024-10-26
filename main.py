@@ -10,11 +10,31 @@ from app.visa import is_visa, parse_visa
 
 
 def parse_config(path: str) -> Config:
+    # Default configuration
+    default_config = {
+        "format": "{date}\t{method}\t{code}\t{description}\t{category}\t{amount}",
+        "categories": {},  # Empty dict instead of None
+        "excludes": []     # Empty list instead of None
+    }
+    
     try:
         with open(path, encoding="utf8") as json_file:
-            return json.load(json_file)
-    except Exception:
-        return {}
+            config = json.load(json_file)
+            # Merge with defaults, keeping user values where they exist
+            return {
+                "format": config.get("format", default_config["format"]),
+                "categories": config.get("categories", default_config["categories"]),
+                "excludes": config.get("excludes", default_config["excludes"])
+            }
+    except FileNotFoundError:
+        print(f"Warning: Config file '{path}' not found. Using default configuration.")
+        return default_config
+    except json.JSONDecodeError:
+        print(f"Warning: Config file '{path}' is not valid JSON. Using default configuration.")
+        return default_config
+    except Exception as e:
+        print(f"Warning: Error reading config file: {str(e)}. Using default configuration.")
+        return default_config
 
 
 def parse_files(path: str) -> list:
@@ -53,6 +73,10 @@ def parse_args() -> tuple[list, dict, str]:
 
 
 def parse_pdf(file_path: str, categories: dict, excludes: list) -> list:
+    # Ensure categories and excludes are never None
+    categories = categories or {}
+    excludes = excludes or []
+    
     if is_chequing(file_path):
         return parse_chequing(file_path, categories, excludes)
 
