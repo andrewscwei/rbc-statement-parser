@@ -1,0 +1,8 @@
+{
+  "categories": {
+    "Food": ["RESTAURANT", "GROCERY", "FOOD"],
+    "Transport": ["UBER", "TAXI", "TRANSIT"],
+    "Bills": ["BILL", "INSURANCE", "UTILITIES"]
+  },
+  "excludes": []
+}

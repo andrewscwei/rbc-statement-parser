@@ -2,16 +2,6 @@
 
 Python script for parsing RBC PDF statements, compatible with both VISA and personal banking accounts (i.e. chequing, savings, etc). The output is a list of formatted transactions printed on console or output to a file.
 
-## Setup
-
-Set up environment:
-
-```sh
-$ pre-commit install
-$ pipenv install -d
-$ pipenv shell
-```
-
 ## Usage
 
 Download PDF statements from RBC and save them in a directory.
@@ -24,15 +14,62 @@ $ python main.py <pdf_file_or_dir_of_pdf_files>
 $ python main.py <pdf_file_or_dir_of_pdf_files> -o out.txt
 ```
 
-## Linting
+## Requirements
 
-```sh
-$ pylint **/*.py
+- **Python**
+  - Version number specified in `./python-version`)
+
+- **Python Pip packages**
+  - `pipenv`
+
+- **Optional**
+  - Docker
+  - pre-commit
+
+## Install
+
+### Quick Install
+
+In Terminal:
+
+```shell
+pipenv install --python $(which python3) -d
+pipenv shell
 ```
 
-## Config
+### Full Install
 
-Create a `.rc` file in project root. You can also provide another file name and pass it to `--config` or `-c` option flag when executing `main.py`. See below example to understand what this config does:
+```shell
+# Clone the repo
+git clone https://github.com/andrewscwei/rbc-statement-parser.git
+cd rbc-statement parser
+
+# Install pipenv if it doesn't exist
+if ! command -v pipenv >/dev/null 2>&1; then
+    echo "Installing pipenv..."
+    if command -v pipx >/dev/null 2>&1; then
+      pipx install --no-cache-dir pipenv
+    else
+      pip install --user pipenv
+    fi
+fi
+
+pipenv install --python $(which python3) -d
+pipenv shell
+
+python main.py /path/to/your/pdf-files
+```
+
+## Config File
+
+The parser will look for a `.rc` config file in the project root. If no file is found, the parser will use a default config.
+
+To create your own custom config, see `.rcexample` for a template.
+
+To provide a custom config file name or path, use the `--config` or `-c` option flag when executing `main.py`. 
+Example: `python main.py --config /path/to/myRcFile`
+
+### `.rc` file structure
 
 ```js
 {
@@ -67,4 +104,28 @@ Create a `.rc` file in project root. You can also provide another file name and 
     ...
   ]
 }
+```
+
+## Docker Usage
+
+This project can also be built and ran inside a Docker container:
+
+```shell
+cd rbc-statement-parser
+
+docker build -t rbc-parser .
+
+alias rbcparser='docker run --rm -v "$(pwd)":/app/input -v "$(pwd)":/app/output rbc-parser /app/input/ -o /app/output/output-$(date +"%s").txt'
+
+cd /path/to/your/rbc-pdf-files/
+
+# Parse all PDFs in current diretory into a output.txt file:
+rbcparser
+```
+
+## Linting
+
+```sh
+pre-commit install
+pylint **/*.py
 ```
