@@ -22,7 +22,7 @@ def is_chequing(file_path: str) -> bool:
 
 
 def extract_start_date(pdf: str) -> datetime | None:
-    regex = rf"from ({PAT_DATE_LONG}) to ({PAT_DATE_LONG})"
+    regex = rf"({PAT_DATE_LONG}) to ({PAT_DATE_LONG})"
 
     if match := re.search(regex, pdf, re.IGNORECASE):
         end_year = match[8]
@@ -84,7 +84,7 @@ def extract_description(soup: BeautifulSoup) -> Optional[str]:
 def extract_withdrawal_amount(soup: BeautifulSoup) -> Optional[float]:
     padding = extract_left_padding(soup)
 
-    if 250 < padding < 360 and re.match(rf"^{PAT_AMOUNT}$", soup.text, re.IGNORECASE):
+    if 320 < padding < 390 and re.match(rf"^{PAT_AMOUNT}$", soup.text, re.IGNORECASE):
         return parse_float(soup.text)
 
     return None
@@ -93,7 +93,7 @@ def extract_withdrawal_amount(soup: BeautifulSoup) -> Optional[float]:
 def extract_deposit_amount(soup: BeautifulSoup) -> Optional[float]:
     padding = extract_left_padding(soup)
 
-    if 360 < padding < 460 and re.match(rf"^{PAT_AMOUNT}$", soup.text, re.IGNORECASE):
+    if 390 < padding < 480 and re.match(rf"^{PAT_AMOUNT}$", soup.text, re.IGNORECASE):
         return parse_float(soup.text)
 
     return None
@@ -102,7 +102,7 @@ def extract_deposit_amount(soup: BeautifulSoup) -> Optional[float]:
 def extract_balance_amount(soup: BeautifulSoup) -> Optional[float]:
     padding = extract_left_padding(soup)
 
-    if 460 < padding < 600 and re.match(rf"^{PAT_AMOUNT}$", soup.text, re.IGNORECASE):
+    if 480 < padding < 600 and re.match(rf"^{PAT_AMOUNT}$", soup.text, re.IGNORECASE):
         return parse_float(soup.text)
 
     return None
@@ -115,6 +115,10 @@ def parse_chequing(
 ) -> List[Transaction]:
     pdf = read_pdf(pdf_path, html=True)
     start_date = extract_start_date(pdf)
+
+    if start_date is None:
+        return []
+
     lines = pdf.splitlines()
     transactions = []
     pat = r"^<p.*</p>$"
