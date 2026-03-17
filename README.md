@@ -8,8 +8,7 @@ Set up environment:
 
 ```sh
 $ pre-commit install
-$ pipenv install -d
-$ pipenv shell
+$ uv sync
 ```
 
 ## Usage
@@ -18,21 +17,21 @@ Download PDF statements from RBC and save them in a directory.
 
 ```sh
 # Parse PDF(s) and output to console
-$ python main.py <pdf_file_or_dir_of_pdf_files>
+$ uv run parse <pdf_file_or_dir_of_pdf_files>
 
 # Parse PDF(s) and output to console and out.txt
-$ python main.py <pdf_file_or_dir_of_pdf_files> -o out.txt
+$ uv run parse <pdf_file_or_dir_of_pdf_files> -o out.txt
 ```
 
 ## Linting
 
 ```sh
-$ pylint **/*.py
+$ uv run pylint **/*.py
 ```
 
 ## Config
 
-Create a `.rc` file in project root. You can also provide another file name and pass it to `--config` or `-c` option flag when executing `main.py`. See below example to understand what this config does:
+Create a `.rc` file in project root. You can also provide another file name and pass it to `--config` or `-c` option flag when executing `parse`. See below example to understand what this config does:
 
 ```js
 {
