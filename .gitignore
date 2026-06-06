@@ -156,4 +156,4 @@ dmypy.json
 cython_debug/
 
 # Project-specific sensitive files
-.rc
+config.json

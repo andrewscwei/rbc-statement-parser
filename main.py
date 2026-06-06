@@ -38,7 +38,7 @@ def parse_args() -> tuple[list, dict, str]:
     )
 
     parser.add_argument("path", help="Path or to PDF or directory of PDFs")
-    parser.add_argument("--config", "-c", help="Path to config file", default=".rc")
+    parser.add_argument("--config", "-c", help="Path to config file", default="config.json")
     parser.add_argument("--out", "-o", help="Path to output file")
 
     args = parser.parse_args()

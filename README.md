@@ -31,7 +31,7 @@ $ uv run pylint **/*.py
 
 ## Config
 
-Create a `.rc` file in project root. You can also provide another file name and pass it to `--config` or `-c` option flag when executing `parse`. See below example to understand what this config does:
+Create a `config.json` file in project root. You can also provide another file name and pass it to `--config` or `-c` option flag when executing `parse`. See below example to understand what this config does:
 
 ```js
 {
