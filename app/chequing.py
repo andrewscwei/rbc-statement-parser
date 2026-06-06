@@ -4,7 +4,7 @@ from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
 
-from .entities import Transaction
+from .types import Transaction
 from .utils import match_category, parse_float, read_pdf, should_exclude
 
 PAT_FILE_PATH = r"chequing statement"

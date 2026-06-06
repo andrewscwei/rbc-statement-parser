@@ -4,7 +4,7 @@ from typing import Optional
 
 import fitz
 
-from .entities import Transaction
+from .types import Transaction
 
 
 def parse_float(string: str):

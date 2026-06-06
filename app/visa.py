@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from typing import List, Optional
 
-from .entities import Transaction
+from .types import Transaction
 from .utils import match_category, parse_float, read_pdf, should_exclude
 
 PAT_FILE_PATH = r"visa statement"
