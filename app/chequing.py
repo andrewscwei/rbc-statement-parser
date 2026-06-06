@@ -18,6 +18,54 @@ PAT_DATE_LONG = rf"((?:{PAT_MONTH_LONG})) ({PAT_DAY})(?:, )?({PAT_YEAR})?"
 PAT_AMOUNT = r"-?\$?[\d,]+\.\d{2}"
 
 
+def parse_chequing(
+    pdf_path: str,
+    categories: Dict[str, List[str]] = None,
+    excludes: List[str] = None,
+) -> List[Transaction]:
+    pdf = read_pdf(pdf_path, html=True)
+    start_date = extract_start_date(pdf)
+
+    if start_date is None:
+        return []
+
+    lines = pdf.splitlines()
+    transactions = []
+    pat = r"^<p.*</p>$"
+
+    tx = {}
+
+    for line in lines:
+        if re.match(pat, line, re.IGNORECASE):
+            soup = BeautifulSoup(line, "html.parser")
+
+            if date := extract_date(soup, start_date=start_date):
+                tx["date"] = date
+            elif tx.get("date") and extract_description(soup):
+                if tx.get("description"):
+                    tx["description"] += f" {soup.text}"
+                else:
+                    tx["description"] = soup.text
+            elif tx.get("description") and extract_withdrawal_amount(soup):
+                tx["amount"] = parse_currency(soup.text) * -1
+            elif tx.get("description") and extract_deposit_amount(soup):
+                tx["amount"] = parse_currency(soup.text)
+
+            if validate_transaction(tx):
+                tx["method"] = "chequing"
+                tx["category"] = match_category(tx.get("description"), categories)
+                tx["posting_date"] = tx.get("date")
+
+                if not should_exclude(tx.get("description"), excludes):
+                    transactions.append(tx)
+
+                tx = {
+                    "date": tx.get("date"),
+                }
+
+    return transactions
+
+
 def is_chequing(file_path: str) -> bool:
     return bool(re.search(PAT_FILE_PATH, file_path, re.IGNORECASE))
 
@@ -107,51 +155,3 @@ def extract_balance_amount(soup: BeautifulSoup) -> Optional[float]:
         return parse_currency(soup.text)
 
     return None
-
-
-def parse_chequing(
-    pdf_path: str,
-    categories: Dict[str, List[str]] = None,
-    excludes: List[str] = None,
-) -> List[Transaction]:
-    pdf = read_pdf(pdf_path, html=True)
-    start_date = extract_start_date(pdf)
-
-    if start_date is None:
-        return []
-
-    lines = pdf.splitlines()
-    transactions = []
-    pat = r"^<p.*</p>$"
-
-    tx = {}
-
-    for line in lines:
-        if re.match(pat, line, re.IGNORECASE):
-            soup = BeautifulSoup(line, "html.parser")
-
-            if date := extract_date(soup, start_date=start_date):
-                tx["date"] = date
-            elif tx.get("date") and extract_description(soup):
-                if tx.get("description"):
-                    tx["description"] += f" {soup.text}"
-                else:
-                    tx["description"] = soup.text
-            elif tx.get("description") and extract_withdrawal_amount(soup):
-                tx["amount"] = parse_currency(soup.text) * -1
-            elif tx.get("description") and extract_deposit_amount(soup):
-                tx["amount"] = parse_currency(soup.text)
-
-            if validate_transaction(tx):
-                tx["method"] = "chequing"
-                tx["category"] = match_category(tx.get("description"), categories)
-                tx["posting_date"] = tx.get("date")
-
-                if not should_exclude(tx.get("description"), excludes):
-                    transactions.append(tx)
-
-                tx = {
-                    "date": tx.get("date"),
-                }
-
-    return transactions

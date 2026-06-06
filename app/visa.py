@@ -16,6 +16,30 @@ PAT_AMOUNT = r"-?\$[\d,]+\.\d{2}"
 PAT_CODE = r"\d{23}"
 
 
+def parse_visa(
+    pdf_path: str,
+    categories: Optional[dict],
+    excludes: Optional[list],
+) -> List[Transaction]:
+    pdf = read_pdf(pdf_path)
+    start_date = extract_start_date(pdf)
+
+    lines = re.sub(
+        rf"\n(?!{PAT_DATE_SHORT}\n{PAT_DATE_SHORT})",
+        " ",
+        pdf,
+        flags=re.IGNORECASE,
+    )
+
+    transactions = [
+        tx
+        for line in lines.splitlines()
+        if (tx := parse_transaction(line, start_date, categories or {}, excludes or []))
+    ]
+
+    return transactions
+
+
 def is_visa(file_path: str) -> bool:
     return bool(re.search(PAT_FILE_PATH, file_path, re.IGNORECASE))
 
@@ -73,27 +97,3 @@ def parse_transaction(
         "description": description,
         "posting_date": parse_date(f"{posting_date} {ref_year}"),
     }
-
-
-def parse_visa(
-    pdf_path: str,
-    categories: Optional[dict],
-    excludes: Optional[list],
-) -> List[Transaction]:
-    pdf = read_pdf(pdf_path)
-    start_date = extract_start_date(pdf)
-
-    lines = re.sub(
-        rf"\n(?!{PAT_DATE_SHORT}\n{PAT_DATE_SHORT})",
-        " ",
-        pdf,
-        flags=re.IGNORECASE,
-    )
-
-    transactions = [
-        tx
-        for line in lines.splitlines()
-        if (tx := parse_transaction(line, start_date, categories or {}, excludes or []))
-    ]
-
-    return transactions
