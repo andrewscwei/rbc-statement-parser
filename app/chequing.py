@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from .io import read_pdf
 from .types import Transaction
-from .utils import match_category, parse_float, should_exclude
+from .utils import match_category, parse_currency, should_exclude
 
 PAT_FILE_PATH = r"chequing statement"
 PAT_MONTH_SHORT = r"jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
@@ -86,7 +86,7 @@ def extract_withdrawal_amount(soup: BeautifulSoup) -> Optional[float]:
     padding = extract_left_padding(soup)
 
     if 320 < padding < 390 and re.match(rf"^{PAT_AMOUNT}$", soup.text, re.IGNORECASE):
-        return parse_float(soup.text)
+        return parse_currency(soup.text)
 
     return None
 
@@ -95,7 +95,7 @@ def extract_deposit_amount(soup: BeautifulSoup) -> Optional[float]:
     padding = extract_left_padding(soup)
 
     if 390 < padding < 480 and re.match(rf"^{PAT_AMOUNT}$", soup.text, re.IGNORECASE):
-        return parse_float(soup.text)
+        return parse_currency(soup.text)
 
     return None
 
@@ -104,7 +104,7 @@ def extract_balance_amount(soup: BeautifulSoup) -> Optional[float]:
     padding = extract_left_padding(soup)
 
     if 480 < padding < 600 and re.match(rf"^{PAT_AMOUNT}$", soup.text, re.IGNORECASE):
-        return parse_float(soup.text)
+        return parse_currency(soup.text)
 
     return None
 
@@ -138,9 +138,9 @@ def parse_chequing(
                 else:
                     tx["description"] = soup.text
             elif tx.get("description") and extract_withdrawal_amount(soup):
-                tx["amount"] = parse_float(soup.text) * -1
+                tx["amount"] = parse_currency(soup.text) * -1
             elif tx.get("description") and extract_deposit_amount(soup):
-                tx["amount"] = parse_float(soup.text)
+                tx["amount"] = parse_currency(soup.text)
 
             if validate_transaction(tx):
                 tx["method"] = "chequing"

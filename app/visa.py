@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from .io import read_pdf
 from .types import Transaction
-from .utils import match_category, parse_float, should_exclude
+from .utils import match_category, parse_currency, should_exclude
 
 PAT_FILE_PATH = r"visa statement"
 PAT_MONTH = r"jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
@@ -65,7 +65,7 @@ def parse_transaction(
     ref_year = start_date.year + (1 if ref_date.month < start_date.month else 0)
 
     return {
-        "amount": parse_float(amount) * -1,
+        "amount": parse_currency(amount) * -1,
         "method": "visa",
         "category": category,
         "code": code,

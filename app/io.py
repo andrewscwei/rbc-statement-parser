@@ -3,14 +3,18 @@ import os
 import fitz
 
 
-def read_pdf(pdf_path: str, html: bool = False) -> str:
-    if not os.path.exists(pdf_path):
-        raise FileNotFoundError(f"File {pdf_path} not found")
+def read_pdf(file_path: str, html: bool = False) -> str:
+    """Read the contents of a PDF file and return it as a string. If `html` is
+    True, returns the text in HTML format; otherwise, returns plain text.
+    """
 
-    if not pdf_path.lower().endswith(".pdf"):
-        raise TypeError(f"File {pdf_path} is not a recognized PDF")
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File {file_path} not found")
 
-    document = fitz.open(pdf_path)
+    if not file_path.lower().endswith(".pdf"):
+        raise TypeError(f"File {file_path} is not a recognized PDF")
+
+    document = fitz.open(file_path)
     string = ""
 
     for page_num in range(len(document)):
@@ -21,6 +25,8 @@ def read_pdf(pdf_path: str, html: bool = False) -> str:
 
 
 def read_file(file_path: str) -> str:
+    """Read the contents of a text file and return it as a string."""
+
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File {file_path} not found")
 
@@ -31,5 +37,7 @@ def read_file(file_path: str) -> str:
 
 
 def write_file(string: str, file_path: str):
+    """Write a string to a text file at the specified path."""
+
     with open(file_path, "w", encoding="utf8") as file:
         file.write(string)

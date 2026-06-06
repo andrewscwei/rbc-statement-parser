@@ -7,6 +7,10 @@ def format_transaction(
     default_category: str = "",
     padding: bool = False,
 ) -> str:
+    """Format a transaction as a string using the specified template and
+    optional padding.
+    """
+
     amount = f"{tx.get('amount'):.2f}"
     method = tx.get("method")
     category = tx.get("category") or default_category
