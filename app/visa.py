@@ -10,8 +10,8 @@ PAT_FILE_PATH = r"visa statement"
 PAT_MONTH = r"jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
 PAT_DAY = r"\d{1,2}"
 PAT_YEAR = r"\d{4}"
-PAT_DATE_SHORT = rf"(?:{PAT_MONTH}) {PAT_DAY}"
-PAT_DATE_LONG = rf"((?:{PAT_MONTH})) ({PAT_DAY})(?:, )?({PAT_YEAR})?"
+PAT_DATE_SHORT = rf"(?:{PAT_MONTH})\s+{PAT_DAY}"
+PAT_DATE_LONG = rf"((?:{PAT_MONTH}))\s+({PAT_DAY})(?:,\s*)?({PAT_YEAR})?"
 PAT_AMOUNT = r"-?\$[\d,]+\.\d{2}"
 PAT_CODE = r"\d{23}"
 
@@ -45,7 +45,7 @@ def is_visa(file_path: str) -> bool:
 
 
 def extract_start_date(pdf: str) -> Optional[datetime]:
-    regex = rf"statement from ({PAT_DATE_LONG}) to ({PAT_DATE_LONG})"
+    regex = rf"statement\s+from\s+({PAT_DATE_LONG})\s+to\s+({PAT_DATE_LONG})"
 
     if match := re.search(regex, pdf, re.IGNORECASE):
         end_year = match[8]
