@@ -2,8 +2,9 @@ import re
 from datetime import datetime
 from typing import List, Optional
 
+from .io import read_pdf
 from .types import Transaction
-from .utils import match_category, parse_float, read_pdf, should_exclude
+from .utils import match_category, parse_float, should_exclude
 
 PAT_FILE_PATH = r"visa statement"
 PAT_MONTH = r"jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
@@ -56,10 +57,10 @@ def parse_transaction(
     code = res.group(0) if (res := re.search(PAT_CODE, body, re.IGNORECASE)) else None
     description = body.replace(f" {code}", "") if code else body
 
-    if should_exclude(description, lookup=excludes):
+    if should_exclude(description, exclude_patterns=excludes):
         return None
 
-    category = match_category(description, lookup=categories) or "Other"
+    category = match_category(description, categories=categories) or "Other"
     ref_date = parse_date(f"{date} {start_date.year}")
     ref_year = start_date.year + (1 if ref_date.month < start_date.month else 0)
 

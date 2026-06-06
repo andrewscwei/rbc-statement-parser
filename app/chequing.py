@@ -4,8 +4,9 @@ from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
 
+from .io import read_pdf
 from .types import Transaction
-from .utils import match_category, parse_float, read_pdf, should_exclude
+from .utils import match_category, parse_float, should_exclude
 
 PAT_FILE_PATH = r"chequing statement"
 PAT_MONTH_SHORT = r"jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
